@@ -20,6 +20,7 @@ How much damage you take depends on how hungry you are: At first, you'll barely 
 But if you starve yourself for too long, you can take up to 5% damage per hour.
 
 **Stored calories**, on the other hand, represent the player's body fat and thus change rather slowly.
+In total, one can store up to 20 000 calories in body fat, which is about a week's worth of energy.
 Staying well-nourished by keeping the hunger bar full for some time will slowly accumulate stored calories.
 If you're starving, on the other hand, the stored calories are slowly drained into the hunger bar.
 
