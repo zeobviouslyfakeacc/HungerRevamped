@@ -56,6 +56,8 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Panel_Rest), "UpdateVisuals")]
 		private static class PredictHungerAfterRest {
+			private static HungerTuple lastSimulation;
+
 			private static void Postfix(Panel_Rest __instance) {
 				PlayerManager playerManager = GameManager.GetPlayerManagerComponent();
 				Hunger hunger = GameManager.GetHungerComponent();
@@ -67,8 +69,12 @@ namespace HungerRevamped {
 					calorieBurnRate = playerManager.CalculateModifiedCalorieBurnRate(hunger.m_CalorieBurnPerHourSleeping);
 				}
 
-				int sleepHours = (int) AccessTools.Field(typeof(Panel_Rest), "m_SleepHours").GetValue(__instance);
-				HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, sleepHours);
+				HungerTuple simulation = lastSimulation;
+				if (!GameManager.GetPassTime().IsPassingTime()) {
+					int sleepHours = (int) AccessTools.Field(typeof(Panel_Rest), "m_SleepHours").GetValue(__instance);
+					simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, sleepHours);
+					lastSimulation = simulation;
+				}
 
 				UILabel storedCaloriesLabel = __instance.m_CalorieReservesLabel;
 				int storedCalories = Mathf.RoundToInt(simulation.storedCalories);
