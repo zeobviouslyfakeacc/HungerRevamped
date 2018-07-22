@@ -15,6 +15,7 @@ namespace HungerRevamped {
 				instance = value;
 			}
 		}
+		internal static bool HasInstance() => instance != null;
 
 		internal double storedCalories;
 		internal readonly Hunger hunger;

@@ -9,12 +9,28 @@ namespace HungerRevamped {
 				if ((bool) AccessTools.Field(typeof(Hunger), "m_StartHasBeenCalled").GetValue(__instance))
 					return;
 
-				float burnRateScale = GameManager.GetExperienceModeManagerComponent().GetCalorieBurnScale();
-				__instance.m_MaxReserveCalories = Tuning.maximumHungerCalories * burnRateScale;
-				__instance.m_StarvingCalorieThreshold = Tuning.hungerLevelStarving * __instance.m_MaxReserveCalories;
+				SetMaxHungerBarCalories(__instance);
 
 				HungerRevamped.Instance = new HungerRevamped(__instance);
 			}
+		}
+
+		[HarmonyPatch(typeof(CustomExperienceMode), "UpdateBaseValues")]
+		private static class CustomExperienceModeDoneLoading {
+			private static void Postfix() {
+				if (!HungerRevamped.HasInstance()) {
+					// If this condition is true, Hinterland finally fixed their load order and this patch isn't needed anymore.
+					return;
+				}
+
+				SetMaxHungerBarCalories(HungerRevamped.Instance.hunger);
+			}
+		}
+
+		private static void SetMaxHungerBarCalories(Hunger hunger) {
+			float burnRateScale = GameManager.GetExperienceModeManagerComponent().GetCalorieBurnScale();
+			hunger.m_MaxReserveCalories = Tuning.maximumHungerCalories * burnRateScale;
+			hunger.m_StarvingCalorieThreshold = Tuning.hungerLevelStarving * hunger.m_MaxReserveCalories;
 		}
 
 		[HarmonyPatch(typeof(Condition), "Start")]
