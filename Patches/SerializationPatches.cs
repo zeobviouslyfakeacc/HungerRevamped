@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace HungerRevamped {
@@ -17,7 +16,7 @@ namespace HungerRevamped {
 				if (text == null)
 					return false;
 
-				HungerRevampedSaveDataProxy saveProxy = JsonConvert.DeserializeObject<HungerRevampedSaveDataProxy>(text);
+				HungerRevampedSaveDataProxy saveProxy = Utils.DeserializeObject<HungerRevampedSaveDataProxy>(text);
 				HungerRevamped.Instance.storedCalories = saveProxy.storedCalories + Tuning.defaultStoredCalories;
 				return true;
 			}
@@ -32,7 +31,7 @@ namespace HungerRevamped {
 			private static void Postfix(ref string __result) {
 				HungerRevampedSaveDataProxy saveData = (HungerRevampedSaveDataProxy) AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy").GetValue(null);
 				saveData.storedCalories = HungerRevamped.Instance.storedCalories - Tuning.defaultStoredCalories;
-				__result = JsonConvert.SerializeObject(saveData);
+				__result = Utils.SerializeObject(saveData);
 			}
 		}
 	}
