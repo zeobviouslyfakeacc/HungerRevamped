@@ -1,20 +1,15 @@
-﻿using Harmony;
+﻿using System.Reflection;
+using Harmony;
 
 namespace HungerRevamped {
 	internal class StatusBarPatches {
 
-		[HarmonyPatch(typeof(StatusBar), "Awake")]
+		[HarmonyPatch(typeof(GenericStatusBarSpawner), "Awake")]
 		private static class SetRedLevel {
-			private static void Postfix(StatusBar __instance) {
-				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger) {
-					__instance.m_FillValueThreshold = Tuning.hungerLevelMalnourished;
-
-					// Ugly way of making the right status bar (always visible / tab controlled) show up at the right time
-					if (__instance.m_FillValueRangeActive.x == 0.1f) {
-						__instance.m_FillValueRangeActive.x = Tuning.hungerLevelStarving;
-					} else if (__instance.m_FillValueRangeActive.y == 0.1f) {
-						__instance.m_FillValueRangeActive.y = Tuning.hungerLevelStarving;
-					}
+			private static void Postfix(GenericStatusBarSpawner __instance) {
+				StatusBar statusBar = __instance.m_SpawnedObject.GetComponent<StatusBar>();
+				if (statusBar.m_StatusBarType == StatusBar.StatusBarType.Hunger) {
+					statusBar.m_ThresholdCritical = Tuning.hungerLevelMalnourished;
 				}
 			}
 		}
@@ -24,6 +19,18 @@ namespace HungerRevamped {
 			private static void Postfix(StatusBar __instance, float fillValue) {
 				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger && fillValue > 0f && fillValue <= Tuning.hungerLevelStarving) {
 					__instance.m_OuterBoxSprite.color = GameManager.GetInterfaceManager().m_StatusOuterBoxEmptyColor;
+				}
+			}
+		}
+
+		[HarmonyPatch(typeof(StatusBar), "UpdateBacksplash")]
+		private static class SetStarvingVisuals {
+			private static readonly MethodInfo setActiveBacksplash = AccessTools.Method(typeof(StatusBar), "SetActiveBacksplash");
+
+			private static void Postfix(StatusBar __instance, float fillValue) {
+				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger && fillValue > 0f && fillValue <= Tuning.hungerLevelStarving) {
+					Utils.SetActive(__instance.m_SpriteWhenEmpty.gameObject, true);
+					setActiveBacksplash.Invoke(__instance, new[] { __instance.m_BacksplashDepleted });
 				}
 			}
 		}

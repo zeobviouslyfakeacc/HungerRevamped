@@ -37,11 +37,30 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Panel_FirstAid), "RefreshStatusLabels")]
 		private static class UpdateCalorieStoreDisplay {
+
+			private static readonly float[] HUNGER_LEVELS = { Tuning.hungerLevelStarving, Tuning.hungerLevelMalnourished, Tuning.hungerLevelWellFed, 0.8f };
+
 			private static void Postfix(Panel_FirstAid __instance) {
+				Color red = __instance.m_PoorHealthStatusColor;
+				Color green = InterfaceManager.m_Panel_ActionsRadial.m_FirstAidBuffColor;
+
 				// Replace hunger bar calories with stored calories
 				double storedCalories = HungerRevamped.Instance.storedCalories;
 				__instance.m_CalorieStoreLabel.text = Convert.ToInt64(storedCalories).ToString();
-				__instance.m_CalorieStoreLabel.color = ((storedCalories > 250.0) ? Color.white : __instance.m_PoorHealthStatusColor);
+				__instance.m_CalorieStoreLabel.color = ((storedCalories < 250.0) ? red : Color.white);
+
+				// Set status labels to red when below starving hunger ratio
+				Hunger hunger = HungerRevamped.Instance.hunger;
+				float hungerRatio = Mathf.Clamp01(hunger.m_CurrentReserveCalories / hunger.m_MaxReserveCalories);
+				__instance.m_HungerPercentLabel.color = (hungerRatio < Tuning.hungerLevelStarving) ? red : Color.white;
+				__instance.m_HungerStatusLabel.color = (hungerRatio < Tuning.hungerLevelStarving) ? red : green;
+
+				// Adjust hunger status labels (starving, ravenous, hungry, peckish, full)
+				int hungerLevel = 0;
+				while (hungerLevel < HUNGER_LEVELS.Length && hungerRatio >= HUNGER_LEVELS[hungerLevel]) {
+					++hungerLevel;
+				}
+				__instance.m_HungerStatusLabel.text = Localization.Get(__instance.m_HungerStatusLocIDs[hungerLevel]);
 
 				// Adjust stored calories freezing bonus
 				Transform container = __instance.m_WindchillLabel.gameObject.transform.parent.parent;
