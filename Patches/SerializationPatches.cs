@@ -1,4 +1,6 @@
-﻿using Harmony;
+﻿using System;
+using System.Reflection;
+using Harmony;
 using UnityEngine;
 
 namespace HungerRevamped {
@@ -7,7 +9,8 @@ namespace HungerRevamped {
 		public static void OnLoad() {
 			AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy").SetValue(null, new HungerRevampedSaveDataProxy());
 
-			Debug.Log("HungerRevamped loaded!");
+			Version version = Assembly.GetExecutingAssembly().GetName().Version;
+			Debug.Log("[HungerRevamped] Version " + version + " loaded!");
 		}
 
 		[HarmonyPatch(typeof(Hunger), "Deserialize")]
