@@ -56,5 +56,12 @@ namespace HungerRevamped {
 				__result += HungerRevamped.Instance.GetStoredCaloriesWarmthBonus();
 			}
 		}
+
+		[HarmonyPatch(typeof(PlayerManager), "CalculateModifiedCalorieBurnRate")]
+		private static class ModifyCalorieConsumption {
+			private static void Postfix(ref float __result) {
+				__result *= HungerRevamped.Instance.GetCalorieBurnRateMultiplier();
+			}
+		}
 	}
 }

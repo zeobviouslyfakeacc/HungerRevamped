@@ -88,6 +88,11 @@ namespace HungerRevamped {
 			return Tuning.GetStoredCaloriesWarmthBonus(storedCalorieRatio);
 		}
 
+		internal float GetCalorieBurnRateMultiplier() {
+			float storedCalorieRatio = (float) (storedCalories / Tuning.maximumStoredCalories);
+			return Tuning.GetCalorieBurnRateMultiplier(storedCalorieRatio);
+		}
+
 		internal HungerTuple SimulateHungerBar(float calorieBurnPerHour, float hours) {
 			const int simulationStepsPerHour = 10;
 

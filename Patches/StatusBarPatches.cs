@@ -42,13 +42,13 @@ namespace HungerRevamped {
 				Hunger hunger = hungerRevamped.hunger;
 
 				float hungerFraction = hunger.m_CurrentReserveCalories / hunger.m_MaxReserveCalories;
-				if (hungerFraction < 0.005f || hungerFraction > 0.995f) {
+				if (hungerFraction < 0.005f || hungerFraction > 0.999f) {
 					__result = 0f;
 				} else {
 					if (hunger.IsAddingCaloriesOverTime()) {
 						__result = -hunger.GetCaloriesToAddOverTime();
 					} else {
-						__result = hunger.GetCurrentCalorieBurnPerHour() + hungerRevamped.GetStoredCaloriesChangePerHour();
+						__result = 0.8f * (hunger.GetCurrentCalorieBurnPerHour() + hungerRevamped.GetStoredCaloriesChangePerHour());
 					}
 				}
 

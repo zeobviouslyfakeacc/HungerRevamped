@@ -55,5 +55,10 @@ namespace HungerRevamped {
 			}
 			return storedCaloriesWarmthBonus[rows - 1, 1];
 		}
+
+		internal static float GetCalorieBurnRateMultiplier(float storedCalorieRatio) {
+			float xSqr = storedCalorieRatio * storedCalorieRatio;
+			return 1 + 0.4f * xSqr;
+		}
 	}
 }
