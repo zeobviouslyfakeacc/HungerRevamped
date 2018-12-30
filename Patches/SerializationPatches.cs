@@ -4,10 +4,12 @@ using Harmony;
 using UnityEngine;
 
 namespace HungerRevamped {
-	internal class SerializationPatches {
+	internal static class SerializationPatches {
+
+		private static readonly FieldInfo m_HungerSaveDataProxy = AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy");
 
 		public static void OnLoad() {
-			AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy").SetValue(null, new HungerRevampedSaveDataProxy());
+			m_HungerSaveDataProxy.SetValue(null, new HungerRevampedSaveDataProxy());
 
 			Version version = Assembly.GetExecutingAssembly().GetName().Version;
 			Debug.Log("[HungerRevamped] Version " + version + " loaded!");
@@ -15,12 +17,20 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Hunger), "Deserialize")]
 		private static class HungerDeserialize {
+
 			private static bool Prefix(Hunger __instance, string text) {
 				if (text == null)
 					return false;
 
+				HungerRevamped hungerRevamped = HungerRevamped.Instance;
 				HungerRevampedSaveDataProxy saveProxy = Utils.DeserializeObject<HungerRevampedSaveDataProxy>(text);
-				HungerRevamped.Instance.storedCalories = saveProxy.storedCalories + Tuning.defaultStoredCalories;
+
+				hungerRevamped.storedCalories = saveProxy.storedCalories + Tuning.defaultStoredCalories;
+				hungerRevamped.deferredFoodPoisonings.Clear();
+				if (saveProxy.deferredFoodPoisonings != null) {
+					hungerRevamped.deferredFoodPoisonings.AddRange(saveProxy.deferredFoodPoisonings);
+				}
+
 				return true;
 			}
 
@@ -31,9 +41,14 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Hunger), "Serialize")]
 		private static class HungerSerialize {
+
 			private static void Postfix(ref string __result) {
-				HungerRevampedSaveDataProxy saveData = (HungerRevampedSaveDataProxy) AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy").GetValue(null);
-				saveData.storedCalories = HungerRevamped.Instance.storedCalories - Tuning.defaultStoredCalories;
+				HungerRevamped hungerRevamped = HungerRevamped.Instance;
+				HungerRevampedSaveDataProxy saveData = (HungerRevampedSaveDataProxy) m_HungerSaveDataProxy.GetValue(null);
+
+				saveData.storedCalories = hungerRevamped.storedCalories - Tuning.defaultStoredCalories;
+				saveData.deferredFoodPoisonings = hungerRevamped.deferredFoodPoisonings.ToArray();
+
 				__result = Utils.SerializeObject(saveData);
 			}
 		}

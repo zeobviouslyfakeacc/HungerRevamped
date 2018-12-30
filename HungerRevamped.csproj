@@ -37,6 +37,7 @@
     <Reference Include="UnityEngine.CoreModule" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FoodPoisoningTuple.cs" />
     <Compile Include="HungerTuple.cs" />
     <Compile Include="Patches\DebugCommandPatches.cs" />
     <Compile Include="HungerRevamped.cs" />

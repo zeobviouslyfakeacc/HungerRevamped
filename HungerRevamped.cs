@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HungerRevamped {
@@ -17,11 +18,14 @@ namespace HungerRevamped {
 		}
 		internal static bool HasInstance() => instance != null;
 
-		internal double storedCalories;
 		internal readonly Hunger hunger;
+		internal readonly List<DeferredFoodPoisoning> deferredFoodPoisonings;
+
+		internal double storedCalories;
 
 		internal HungerRevamped(Hunger hunger) {
 			this.hunger = hunger;
+			deferredFoodPoisonings = new List<DeferredFoodPoisoning>();
 			storedCalories = Tuning.startingStoredCalories;
 		}
 
@@ -42,6 +46,8 @@ namespace HungerRevamped {
 			if (conditionChange < 0f) {
 				GameManager.GetConditionComponent().AddHealth(conditionChange, DamageSource.Starving);
 			}
+
+			UpdateFoodPoisoning();
 		}
 
 		internal float GetStoredCaloriesChangePerHour() {
@@ -124,6 +130,36 @@ namespace HungerRevamped {
 			hunger = Mathf.Clamp(hunger, 0f, maxHunger);
 
 			return new HungerTuple(stored, hunger / maxHunger);
+		}
+
+		internal void AddFoodPoisoningCall(string causeId) {
+			float incubationPeriodHours = UnityEngine.Random.Range(Tuning.foodPoisoningDelayHoursMin, Tuning.foodPoisoningDelayHoursMax);
+			float triggerTimeHours = GameManager.GetTimeOfDayComponent().GetHoursPlayedNotPaused() + incubationPeriodHours;
+
+			DeferredFoodPoisoning foodPoisoning = new DeferredFoodPoisoning() { start = triggerTimeHours, cause = causeId };
+			deferredFoodPoisonings.Add(foodPoisoning);
+		}
+
+		internal void OnPlayerTookAntibiotics() {
+			if (GameManager.GetFoodPoisoningComponent().HasFoodPoisoning()) {
+				deferredFoodPoisonings.Clear();
+			} else {
+				deferredFoodPoisonings.RemoveAll(foodPoisoning =>
+						Utils.RollChance(Tuning.foodPoisoningPreventedByAntibioticsChance));
+			}
+		}
+
+		private void UpdateFoodPoisoning() {
+			float currentTimeHours = GameManager.GetTimeOfDayComponent().GetHoursPlayedNotPaused();
+
+			for (int i = deferredFoodPoisonings.Count - 1; i >= 0; --i) {
+				DeferredFoodPoisoning foodPoisoning = deferredFoodPoisonings[i];
+
+				if (currentTimeHours > foodPoisoning.start) {
+					deferredFoodPoisonings.RemoveAt(i);
+					GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(foodPoisoning.cause, true, false);
+				}
+			}
 		}
 	}
 }

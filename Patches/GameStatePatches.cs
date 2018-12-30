@@ -1,4 +1,6 @@
 ﻿using Harmony;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace HungerRevamped {
 	internal class GameStatePatches {
@@ -61,6 +63,31 @@ namespace HungerRevamped {
 		private static class ModifyCalorieConsumption {
 			private static void Postfix(ref float __result) {
 				__result *= HungerRevamped.Instance.GetCalorieBurnRateMultiplier();
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerManager), "OnEatingComplete")]
+		private static class RedirectCallsToFoodPoisoningStart {
+			private static readonly MethodInfo from = AccessTools.Method(typeof(FoodPoisoning), "FoodPoisoningStart");
+			private static readonly MethodInfo to = AccessTools.Method(typeof(RedirectCallsToFoodPoisoningStart), "Target");
+
+			private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+				return Transpilers.MethodReplacer(instructions, from, to);
+			}
+
+			private static void Target(FoodPoisoning fp, string causeId, bool displayIcon, bool nofx) {
+				// Unused method arguments required to clear the argument stack
+				HungerRevamped.Instance.AddFoodPoisoningCall(causeId);
+			}
+		}
+
+		[HarmonyPatch(typeof(PlayerManager), "FirstAidConsumed")]
+		private static class ClearDeferredFoodPoisoningsWhenConsumingAntibiotics {
+
+			private static void Postfix(GearItem gi) {
+				if (gi && gi.m_FirstAidItem && gi.m_FirstAidItem.m_ProvidesAntibiotics) {
+					HungerRevamped.Instance.OnPlayerTookAntibiotics();
+				}
 			}
 		}
 	}

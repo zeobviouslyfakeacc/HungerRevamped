@@ -15,6 +15,10 @@ namespace HungerRevamped {
 		internal const float removingCaloriesPerHour = -200f;
 		internal const float starvingConditionChangePerHour = -5f;
 
+		internal const float foodPoisoningDelayHoursMin = 4f;
+		internal const float foodPoisoningDelayHoursMax = 16f;
+		internal const float foodPoisoningPreventedByAntibioticsChance = 85f;
+
 		internal static readonly float[,] storedCaloriesWarmthBonus = {
 			{0f, -3f}, {0.1f, -2f}, {0.25f, -1f}, {0.5f, 0f}, {0.8f, 1f}, {1f, 2f}
 		};
