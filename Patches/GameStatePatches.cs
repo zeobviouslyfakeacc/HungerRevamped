@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace HungerRevamped {
-	internal class GameStatePatches {
+	internal static class GameStatePatches {
 
 		[HarmonyPatch(typeof(Hunger), "Start")]
 		private static class HungerStart {

@@ -2,7 +2,7 @@
 using Harmony;
 
 namespace HungerRevamped {
-	internal class StatusBarPatches {
+	internal static class StatusBarPatches {
 
 		[HarmonyPatch(typeof(GenericStatusBarSpawner), "Awake")]
 		private static class SetRedLevel {

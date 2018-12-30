@@ -9,7 +9,7 @@ namespace HungerRevamped {
 	 * of them are just dissimilar enough that code can't be reused across different GUI classes...
 	 */
 
-	internal class UIPanelPatches {
+	internal static class UIPanelPatches {
 
 		// Panel_FirstAid
 

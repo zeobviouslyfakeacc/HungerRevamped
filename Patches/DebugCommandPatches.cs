@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace HungerRevamped {
-	internal class DebugCommandPatches {
+	internal static class DebugCommandPatches {
 
 		[HarmonyPatch(typeof(ConsoleManager), "RegisterCommands")]
 		private static class AddConsoleCommands {
