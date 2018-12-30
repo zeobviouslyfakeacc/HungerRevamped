@@ -30,6 +30,9 @@ namespace HungerRevamped {
 		}
 
 		internal void Update() {
+			if (GameManager.m_IsPaused)
+				return;
+
 			float todHours = GameManager.GetTimeOfDayComponent().GetTODHours(Time.deltaTime);
 
 			// Adjust stored calories
