@@ -81,7 +81,7 @@ namespace HungerRevamped {
 		private static float ClampCalorieChange(float calorieChange, float hungerCalories, float maxHungerCalories, double storedCalories) {
 			float result = calorieChange;
 			// Clamp by stored calories
-			result = Mathf.Clamp(result, (float) -storedCalories, (float) (Tuning.maximumStoredCalories - storedCalories));
+			result = Mathf.Max(result, (float) -storedCalories);
 			// Clamp by hunger calories
 			result = Mathf.Clamp(result, hungerCalories - maxHungerCalories, hungerCalories);
 			return result;
