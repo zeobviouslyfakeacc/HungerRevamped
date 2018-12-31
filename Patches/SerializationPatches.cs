@@ -26,6 +26,7 @@ namespace HungerRevamped {
 				HungerRevampedSaveDataProxy saveProxy = Utils.DeserializeObject<HungerRevampedSaveDataProxy>(text);
 
 				hungerRevamped.storedCalories = saveProxy.storedCalories + Tuning.defaultStoredCalories;
+				hungerRevamped.wellFedHungerScore = saveProxy.wellFedHungerScore;
 				hungerRevamped.deferredFoodPoisonings.Clear();
 				if (saveProxy.deferredFoodPoisonings != null) {
 					hungerRevamped.deferredFoodPoisonings.AddRange(saveProxy.deferredFoodPoisonings);
@@ -47,6 +48,7 @@ namespace HungerRevamped {
 				HungerRevampedSaveDataProxy saveData = (HungerRevampedSaveDataProxy) m_HungerSaveDataProxy.GetValue(null);
 
 				saveData.storedCalories = hungerRevamped.storedCalories - Tuning.defaultStoredCalories;
+				saveData.wellFedHungerScore = hungerRevamped.wellFedHungerScore;
 				saveData.deferredFoodPoisonings = hungerRevamped.deferredFoodPoisonings.ToArray();
 
 				__result = Utils.SerializeObject(saveData);

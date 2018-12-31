@@ -19,6 +19,17 @@ namespace HungerRevamped {
 		internal const float foodPoisoningDelayHoursMax = 16f;
 		internal const float foodPoisoningPreventedByAntibioticsChance = 85f;
 
+		internal const float wellFedCarryCapacityBuffMax = 10f;
+		internal const float wellFedCarryBonusStart = 3f;
+		internal const float wellFedCarryBonusEnd = 2f;
+
+		internal const double startingWellFedHungerScore = -1;
+		internal const double wellFedHungerScoreDecayPerHour = 0.98;
+
+		internal static readonly float[,] wellFedHungerScoreChange = {
+			{0, -20}, {hungerLevelStarving, -2}, {hungerLevelMalnourished, 0}, {hungerLevelWellFed, 0}, {1, 1.2f}
+		};
+
 		internal static readonly float[,] storedCaloriesWarmthBonus = {
 			{0f, -3f}, {0.1f, -2f}, {0.25f, -1f}, {0.5f, 0f}, {0.8f, 1f}, {1f, 2f}
 		};
@@ -50,19 +61,36 @@ namespace HungerRevamped {
 		}
 
 		internal static float GetStoredCaloriesWarmthBonus(float storedCaloriesRatio) {
-			int rows = storedCaloriesWarmthBonus.GetLength(0);
-			for (int i = 1; i < rows; ++i) {
-				if (storedCaloriesRatio < storedCaloriesWarmthBonus[i, 0]) {
-					float t = Mathf.InverseLerp(storedCaloriesWarmthBonus[i - 1, 0], storedCaloriesWarmthBonus[i, 0], storedCaloriesRatio);
-					return Mathf.Lerp(storedCaloriesWarmthBonus[i - 1, 1], storedCaloriesWarmthBonus[i, 1], t);
-				}
-			}
-			return storedCaloriesWarmthBonus[rows - 1, 1];
+			return LerpFromArray(storedCaloriesWarmthBonus, storedCaloriesRatio);
 		}
 
 		internal static float GetCalorieBurnRateMultiplier(float storedCalorieRatio) {
 			float xSqr = storedCalorieRatio * storedCalorieRatio;
 			return 1 + 0.4f * xSqr;
+		}
+
+		internal static float GetWellFedHungerScoreChange(float hungerRatio) {
+			return LerpFromArray(wellFedHungerScoreChange, hungerRatio);
+		}
+
+		internal static float GetCarryBonus(float hungerScore /* [-1, 1] */, float storedCaloriesScore /* [-1, 1] */) {
+			float totalScore = storedCaloriesScore + hungerScore; /* [-2, 2] */
+			float totalScore01 = Mathf.Clamp01(0.5f * totalScore);
+			return totalScore01 * wellFedCarryCapacityBuffMax;
+		}
+
+		private static float LerpFromArray(float[,] array, float x) {
+			if (x < array[0, 0])
+				return array[0, 1];
+
+			int rows = array.GetLength(0);
+			for (int i = 1; i < rows; ++i) {
+				if (x < array[i, 0]) {
+					float t = Mathf.InverseLerp(array[i - 1, 0], array[i, 0], x);
+					return Mathf.Lerp(array[i - 1, 1], array[i, 1], t);
+				}
+			}
+			return array[rows - 1, 1];
 		}
 	}
 }

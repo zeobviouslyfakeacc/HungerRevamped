@@ -22,11 +22,14 @@ namespace HungerRevamped {
 		internal readonly List<DeferredFoodPoisoning> deferredFoodPoisonings;
 
 		internal double storedCalories;
+		internal double wellFedHungerScore;
 
 		internal HungerRevamped(Hunger hunger) {
 			this.hunger = hunger;
 			deferredFoodPoisonings = new List<DeferredFoodPoisoning>();
+
 			storedCalories = Tuning.startingStoredCalories;
+			wellFedHungerScore = Tuning.startingWellFedHungerScore;
 		}
 
 		internal void Update() {
@@ -51,6 +54,7 @@ namespace HungerRevamped {
 			}
 
 			UpdateFoodPoisoning();
+			UpdateWellFedHungerScore(todHours);
 		}
 
 		internal float GetStoredCaloriesChangePerHour() {
@@ -163,6 +167,24 @@ namespace HungerRevamped {
 					GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(foodPoisoning.cause, true, false);
 				}
 			}
+		}
+
+		private void UpdateWellFedHungerScore(float todHours) {
+			double decay = Math.Pow(Tuning.wellFedHungerScoreDecayPerHour, todHours);
+			float hungerRatio = hunger.m_CurrentReserveCalories / hunger.m_MaxReserveCalories;
+			float hungerScoreChange = Tuning.GetWellFedHungerScoreChange(hungerRatio);
+
+			// First change the hunger score ...
+			wellFedHungerScore = decay * wellFedHungerScore + (1 - decay) * hungerScoreChange;
+			// ... then clamp it to [-1, 1]
+			wellFedHungerScore = Math.Min(Math.Max(wellFedHungerScore, -1), 1);
+		}
+
+		internal float GetCarryBonus() {
+			float storedCalorieRatio = (float) (storedCalories / Tuning.maximumStoredCalories);
+			float storedCalorieScore = 2 * storedCalorieRatio - 1;
+			float carryBonus = Tuning.GetCarryBonus((float) wellFedHungerScore, storedCalorieScore);
+			return (float) Math.Round(carryBonus, 1);
 		}
 	}
 }

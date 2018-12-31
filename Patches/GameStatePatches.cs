@@ -8,7 +8,7 @@ namespace HungerRevamped {
 		[HarmonyPatch(typeof(Hunger), "Start")]
 		private static class HungerStart {
 			private static void Prefix(Hunger __instance, bool __state) {
-				if ((bool) AccessTools.Field(typeof(Hunger), "m_StartHasBeenCalled").GetValue(__instance))
+				if (Traverse.Create(__instance).Field("m_StartHasBeenCalled").GetValue<bool>())
 					return;
 
 				SetMaxHungerBarCalories(__instance);
@@ -37,11 +37,21 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Condition), "Start")]
 		private static class ConditionStart {
-			private static void Prefix(Condition __instance, bool __state) {
-				if ((bool) AccessTools.Field(typeof(Condition), "m_StartHasBeenCalled").GetValue(__instance))
+			private static void Prefix(Condition __instance) {
+				if (Traverse.Create(__instance).Field("m_StartHasBeenCalled").GetValue<bool>())
 					return;
 
 				__instance.m_HPDecreasePerDayFromStarving = 0f;
+			}
+		}
+
+		[HarmonyPatch(typeof(WellFed), "Start")]
+		private static class WellFedStart {
+			private static void Prefix(WellFed __instance) {
+				if (Traverse.Create(__instance).Field("m_StartHasBeenCalled").GetValue<bool>())
+					return;
+
+				__instance.m_MaxConditionBonusPercent = 0f;
 			}
 		}
 
@@ -88,6 +98,25 @@ namespace HungerRevamped {
 				if (gi && gi.m_FirstAidItem && gi.m_FirstAidItem.m_ProvidesAntibiotics) {
 					HungerRevamped.Instance.OnPlayerTookAntibiotics();
 				}
+			}
+		}
+
+		[HarmonyPatch(typeof(WellFed), "Update")]
+		private static class WellFedNewUpdate {
+			private static bool Prefix(WellFed __instance) {
+				if (GameManager.m_IsPaused)
+					return false;
+
+				bool active = __instance.HasWellFed();
+				float carryBonus = HungerRevamped.Instance.GetCarryBonus();
+				__instance.m_CarryCapacityBonusKG = carryBonus;
+
+				if (!active && carryBonus > Tuning.wellFedCarryBonusStart) {
+					__instance.WellFedStart(__instance.GetCauseLocalizationId(), true, false);
+				} else if (active && carryBonus < Tuning.wellFedCarryBonusEnd) {
+					__instance.WellFedEnd();
+				}
+				return false;
 			}
 		}
 	}
