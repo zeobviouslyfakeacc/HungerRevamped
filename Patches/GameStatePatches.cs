@@ -111,7 +111,7 @@ namespace HungerRevamped {
 				float carryBonus = HungerRevamped.Instance.GetCarryBonus();
 				__instance.m_CarryCapacityBonusKG = carryBonus;
 
-				if (!active && carryBonus > Tuning.wellFedCarryBonusStart) {
+				if (!active && carryBonus >= Tuning.wellFedCarryBonusStart) {
 					__instance.WellFedStart(__instance.GetCauseLocalizationId(), true, false);
 				} else if (active && carryBonus < Tuning.wellFedCarryBonusEnd) {
 					__instance.WellFedEnd();
