@@ -19,15 +19,15 @@ namespace HungerRevamped {
 		internal const float foodPoisoningDelayHoursMax = 16f;
 		internal const float foodPoisoningPreventedByAntibioticsChance = 85f;
 
-		internal const float wellFedCarryCapacityBuffMax = 10f;
-		internal const float wellFedCarryBonusStart = 3f;
+		internal const float wellFedCarryCapacityBuffMax = 7.5f;
+		internal const float wellFedCarryBonusStart = 2.5f;
 		internal const float wellFedCarryBonusEnd = 2f;
 
 		internal const double startingWellFedHungerScore = -1;
 		internal const double wellFedHungerScoreDecayPerHour = 0.98;
 
 		internal static readonly float[,] wellFedHungerScoreChange = {
-			{0, -20}, {hungerLevelStarving, -2}, {hungerLevelMalnourished, 0}, {hungerLevelWellFed, 0}, {1, 1.2f}
+			{0f, -20f}, {hungerLevelStarving, -2.5f}, {hungerLevelMalnourished, 0f}, {hungerLevelWellFed, 0f}, {1f, 1.5f}
 		};
 
 		internal static readonly float[,] storedCaloriesWarmthBonus = {
@@ -48,8 +48,9 @@ namespace HungerRevamped {
 			if (removeRatio01 > 0.999f) // Empty hunger bar, take all from stored calories
 				return -calorieBurnRate;
 
+			float maxCaloriesRemovedPerHour = GetCalorieBurnRateMultiplier(storedCaloriesRatio) * removingCaloriesPerHour;
 			float calorieRemoveSpeed = removeRatio01 / (1 - Mathf.Log10(storedCaloriesRatio));
-			return Mathf.Max(removingCaloriesPerHour * calorieRemoveSpeed, -calorieBurnRate);
+			return Mathf.Max(maxCaloriesRemovedPerHour * calorieRemoveSpeed, -calorieBurnRate);
 		}
 
 		internal static float GetConditionChangePerHour(float hungerRatio, double storedCalories) {
@@ -66,7 +67,7 @@ namespace HungerRevamped {
 
 		internal static float GetCalorieBurnRateMultiplier(float storedCalorieRatio) {
 			float xSqr = storedCalorieRatio * storedCalorieRatio;
-			return 1 + 0.4f * xSqr;
+			return 0.95f + 0.4f * xSqr;
 		}
 
 		internal static float GetWellFedHungerScoreChange(float hungerRatio) {
@@ -75,7 +76,7 @@ namespace HungerRevamped {
 
 		internal static float GetCarryBonus(float hungerScore /* [-1, 1] */, float storedCaloriesScore /* [-1, 1] */) {
 			float totalScore = storedCaloriesScore + hungerScore; /* [-2, 2] */
-			float totalScore01 = Mathf.Clamp01(0.5f * totalScore);
+			float totalScore01 = Mathf.Clamp01(totalScore);
 			return totalScore01 * wellFedCarryCapacityBuffMax;
 		}
 
