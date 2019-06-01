@@ -23,7 +23,8 @@ namespace HungerRevamped {
 				GameObject storedCaloriesRow = NGUITools.AddChild(windChillRow.parent.gameObject, windChillRow.gameObject);
 				storedCaloriesRow.name = "StoredCaloriesWarmthLabel";
 				UISprite icon = storedCaloriesRow.transform.Find("Stat Icon").GetComponent<UISprite>();
-				icon.spriteName = "ico_HUD_hunger"; //"ico_Radial_food2";
+				icon.spriteName = "ico_status_hunger4"; // old: ico_HUD_hunger, ico_Radial_food2
+				icon.transform.localPosition += new Vector3(-1, 0); // Tiny position nudge to center icon properly
 				UILocalize nameLabel = storedCaloriesRow.transform.Find("Stat Label").GetComponent<UILocalize>();
 				nameLabel.key = "GAMEPLAY_CalorieStore";
 
