@@ -18,7 +18,7 @@ namespace HungerRevamped {
 
 		internal const float foodPoisoningDelayHoursMin = 4f;
 		internal const float foodPoisoningDelayHoursMax = 16f;
-		internal const float foodPoisoningPreventedByAntibioticsChance = 85f;
+		internal const float foodPoisoningPreventedByAntibioticsChance = 90f;
 
 		internal const float wellFedCarryCapacityBuffMax = 7.5f;
 		internal const float wellFedCarryBonusStart = 2.5f;
