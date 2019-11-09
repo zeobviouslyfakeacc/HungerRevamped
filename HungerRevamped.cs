@@ -28,8 +28,20 @@ namespace HungerRevamped {
 			this.hunger = hunger;
 			deferredFoodPoisonings = new List<DeferredFoodPoisoning>();
 
-			storedCalories = Tuning.startingStoredCalories;
+			if (GameManager.InCustomMode() || IsRelentlessNightGame()) {
+				storedCalories = CustomModeSettings.settings.startingStoredCalories;
+			} else {
+				storedCalories = Tuning.startingStoredCalories;
+			}
 			wellFedHungerScore = Tuning.startingWellFedHungerScore;
+		}
+
+		private static bool IsRelentlessNightGame() {
+			if (!GameManager.GetVersionString().Contains("Relentless Night")) return false;
+			string typeName = System.Reflection.Assembly.CreateQualifiedName("RelentlessNight", "RelentlessNight.RnGl");
+			Type rnGlobals = Type.GetType(typeName, false);
+			if (rnGlobals == null) return false;
+			return (bool) Harmony.AccessTools.Field(rnGlobals, "rnActive").GetValue(null);
 		}
 
 		internal void Update() {

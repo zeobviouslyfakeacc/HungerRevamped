@@ -37,12 +37,16 @@
     <Reference Include="0Harmony">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModSettings">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine.CoreModule">
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomModeSettings.cs" />
     <Compile Include="FoodPoisoningTuple.cs" />
     <Compile Include="HungerTuple.cs" />
     <Compile Include="Patches\DebugCommandPatches.cs" />
