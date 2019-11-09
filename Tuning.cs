@@ -9,6 +9,7 @@ namespace HungerRevamped {
 
 		internal const float hungerLevelWellFed = 0.6f;
 		internal const float hungerLevelMalnourished = 0.35f;
+		internal const float hungerLevelStarvingWarning = 0.25f;
 		internal const float hungerLevelStarving = 0.2f;
 
 		internal const float storingCaloriesPerHour = 120f;
