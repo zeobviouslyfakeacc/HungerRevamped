@@ -91,20 +91,18 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(FoodPoisoning), "UpdateFoodPoisoning")]
-		private static class ReduceConditionDrainWhileSleeping {
-			private static readonly MethodInfo from = AccessTools.Method(typeof(Condition), "AddHealth", new[] { typeof(float), typeof(DamageSource) });
-			private static readonly MethodInfo to = AccessTools.Method(typeof(ReduceConditionDrainWhileSleeping), "Target");
+		[HarmonyPatch(typeof(FoodPoisoning), "FoodPoisoningStart")]
+		private static class WakeUpPlayerOnFoodPoisoning {
+			private static void Postfix() {
+				if (GameManager.GetPlayerManagerComponent().PlayerIsDead() || InterfaceManager.m_Panel_ChallengeComplete.IsEnabled())
+					return;
+				if (GameManager.InCustomMode() && !GameManager.GetCustomMode().m_EnableFoodPoisoning)
+					return;
 
-			private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
-				return Transpilers.MethodReplacer(instructions, from, to);
-			}
-
-			private static void Target(Condition condition, float hp, DamageSource cause) {
-				if (GameManager.GetPlayerManagerComponent().PlayerIsSleeping()) {
-					hp *= 0.25f;
+				Rest rest = GameManager.GetRestComponent();
+				if (rest.IsSleeping()) {
+					rest.EndSleeping(true);
 				}
-				condition.AddHealth(hp, cause);
 			}
 		}
 
