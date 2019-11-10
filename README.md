@@ -21,8 +21,8 @@ But if you starve yourself for too long, you can take up to 5% damage per hour.
 
 **Stored calories**, on the other hand, represent the player's body fat and thus change rather slowly.
 In total, one can store up to 20 000 calories in body fat, which is about a week's worth of energy.
-Staying well-nourished by keeping the hunger bar full for some time will slowly accumulate stored calories.
-If you're starving, on the other hand, the stored calories are slowly drained into the hunger bar.
+Staying well-nourished by keeping the hunger bar full (indicated by a small, green plus sign) for some time will slowly accumulate stored calories.
+If you're hungry (indicated by a red minus sign), on the other hand, the stored calories are slowly drained into the hunger bar.
 
 That means that if you have lots and lots of stored calories, your hunger bar won't empty all the way,
 shielding you from most starvation damage. If you have very few stored calories,
@@ -53,7 +53,7 @@ survive trivial, even in Interloper. By not being able to cheat the hunger syste
 survival is much more of a challenge.
 
 If HungerRevamped still doesn't make this aspect of the game interesting enough,
-consider getting [WildlifeBegone](https://github.com/zeobviouslyfakeacc/MiniMods/releases).
+consider getting [WildlifeBegone](https://github.com/zeobviouslyfakeacc/WildlifeBegone/releases).
 This mod makes wildlife much rarer, delaying (or maybe even getting rid of) that point
 in the game where you find yourself with a huge pile of food and nothing to do.
 
@@ -62,6 +62,8 @@ in the game where you find yourself with a huge pile of food and nothing to do.
 You'll start with 12 000 stored calories. That means that you'll have a buffer period at the start
 of the game during which you don't need to consume much food. This is especially useful in Interloper,
 where you find very little food until you can craft a bow and hunt game.
+
+If you're playing a custom mode game, you can also customize how many calories you start with.
 
 #### Travelling
 
@@ -94,6 +96,6 @@ but the amount of calories stored in body fat will be lost.
 
 ### Recommendations
 
-- Don't play in Pilgrim. A better hunger system really doesn't matter if you only consume 50 calories per hour.
-- Consider getting [EnableStatusBarPercentages](https://github.com/zeobviouslyfakeacc/MiniMods/releases).
+- Don't play on Pilgrim. A better hunger system really doesn't matter if you only consume 50 calories per hour.
+- Consider getting [EnableStatusBarPercentages](https://github.com/zeobviouslyfakeacc/EnableStatusBarPercentages/releases).
   It lets you see the exact fill levels of your status bar in the status / first aid screen.
