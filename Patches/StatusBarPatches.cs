@@ -13,7 +13,7 @@ namespace HungerRevamped {
 				statusBar.m_ThresholdCritical = Tuning.hungerLevelStarvingWarning;
 
 				UISprite buff = statusBar.m_BuffObject.GetComponent<UISprite>();
-				buff.color = new UnityEngine.Color(0f, 0.8f, 0.5f);
+				buff.color = new UnityEngine.Color(0f, 0.429f, 0.276f); // Same green as carry weight buff
 
 				// The buff object has a nice "plus" sprite, but there's no minus sprite...
 				// So let's create our own by cutting off 27 pixels from the top and the bottom of that plus sprite
@@ -32,7 +32,7 @@ namespace HungerRevamped {
 				debuff.height = buff.height;
 				debuff.width = buff.width;
 				debuff.transform.localPosition = buff.transform.localPosition;
-				debuff.color = new UnityEngine.Color(0.65f, 0.2f, 0.25f);
+				debuff.color = new UnityEngine.Color(0.64f, 0.2f, 0.23f); // m_StatusMainSpriteBelowThresholdColor
 			}
 		}
 
@@ -57,13 +57,13 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(StatusBar), "Update")]
+		[HarmonyPatch(typeof(StatusBar), "UpdateBacksplash")]
 		private static class ShowCalorieStoreSymbols {
-			private static void Postfix(StatusBar __instance) {
+			private static void Postfix(StatusBar __instance, float fillValue) {
 				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger) {
-					float calorieTransfer = HungerRevamped.Instance.GetStoredCaloriesChangePerHour();
-					Utils.SetActive(__instance.m_DebuffObject, calorieTransfer < 0f);
-					Utils.SetActive(__instance.m_BuffObject, calorieTransfer > 0f);
+					double storedCalories = HungerRevamped.Instance.storedCalories;
+					Utils.SetActive(__instance.m_DebuffObject, fillValue <= Tuning.hungerLevelMalnourished && storedCalories > 0);
+					Utils.SetActive(__instance.m_BuffObject, fillValue > Tuning.hungerLevelWellFed && storedCalories < Tuning.maximumStoredCalories);
 				}
 			}
 		}
