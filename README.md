@@ -85,9 +85,9 @@ more than 20% full – if possible.
 
 ### Installation
 
-- If you haven't already done so, install the [Mod Loader](https://github.com/zeobviouslyfakeacc/ModLoaderInstaller)
-- Head over to the [Releases page](https://github.com/zeobviouslyfakeacc/HungerRevamped/releases) and download `HungerRevamped.dll`
-- Move `HungerRevamped.dll` into your mods directory
+1. If you haven't done so already, install MelonLoader by downloading and running [MelonLoader.Installer.exe](https://github.com/HerpDerpinstine/MelonLoader/releases/latest/download/MelonLoader.Installer.exe)
+2. Download the latest version of `HungerRevamped.dll` from the [releases page](https://github.com/zeobviouslyfakeacc/HungerRevamped/releases)
+3. Move `HungerRevamped.dll` into the Mods folder in your TLD install directory
 
 You can install and use Hunger Revamped in old saves. You'll start with 10 000 stored calories.
 
