@@ -1,6 +1,6 @@
 ﻿namespace HungerRevamped {
 
-	internal class HungerRevampedSaveDataProxy : HungerSaveDataProxy {
+	internal class HungerRevampedSaveDataProxy {
 
 		public double storedCalories;
 		public double wellFedHungerScore;

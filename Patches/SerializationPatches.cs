@@ -1,57 +1,49 @@
-﻿using System;
-using System.Reflection;
-using Harmony;
+﻿using Harmony;
+using MelonLoader.TinyJSON;
 using UnityEngine;
 
 namespace HungerRevamped {
 	internal static class SerializationPatches {
 
-		private static readonly FieldInfo m_HungerSaveDataProxy = AccessTools.Field(typeof(Hunger), "m_HungerSaveDataProxy");
+		private const string SAVE_SLOT_NAME = "MOD_HungerRevamped";
+		private static readonly HungerRevampedSaveDataProxy saveDataProxy = new HungerRevampedSaveDataProxy();
 
-		public static void OnLoad() {
-			m_HungerSaveDataProxy.SetValue(null, new HungerRevampedSaveDataProxy());
-
-			Version version = Assembly.GetExecutingAssembly().GetName().Version;
-			Debug.Log("[HungerRevamped] Version " + version + " loaded!");
-		}
-
-		[HarmonyPatch(typeof(Hunger), "Deserialize")]
+		[HarmonyPatch(typeof(SaveGameSystem), "RestoreGlobalData")]
 		private static class HungerDeserialize {
 
-			private static bool Prefix(Hunger __instance, string text) {
-				if (text == null)
-					return false;
+			private static void Postfix(string name) {
+				string json = SaveGameSlots.LoadDataFromSlot(name, SAVE_SLOT_NAME);
+
+				if (string.IsNullOrEmpty(json))
+					return;
 
 				HungerRevamped hungerRevamped = HungerRevamped.Instance;
-				HungerRevampedSaveDataProxy saveProxy = Utils.DeserializeObject<HungerRevampedSaveDataProxy>(text);
+				JSON.Load(json).Populate(saveDataProxy);
 
-				hungerRevamped.storedCalories = saveProxy.storedCalories + Tuning.defaultStoredCalories;
-				hungerRevamped.wellFedHungerScore = saveProxy.wellFedHungerScore;
+				hungerRevamped.storedCalories = saveDataProxy.storedCalories + Tuning.defaultStoredCalories;
+				hungerRevamped.wellFedHungerScore = saveDataProxy.wellFedHungerScore;
 				hungerRevamped.deferredFoodPoisonings.Clear();
-				if (saveProxy.deferredFoodPoisonings != null) {
-					hungerRevamped.deferredFoodPoisonings.AddRange(saveProxy.deferredFoodPoisonings);
+				if (saveDataProxy.deferredFoodPoisonings != null) {
+					hungerRevamped.deferredFoodPoisonings.AddRange(saveDataProxy.deferredFoodPoisonings);
 				}
 
-				return true;
-			}
-
-			private static void Postfix(Hunger __instance) {
-				__instance.m_CurrentReserveCalories = Mathf.Min(__instance.m_CurrentReserveCalories, __instance.m_MaxReserveCalories);
+				Hunger hunger = GameManager.GetHungerComponent();
+				hunger.m_CurrentReserveCalories = Mathf.Min(hunger.m_CurrentReserveCalories, hunger.m_MaxReserveCalories);
 			}
 		}
 
-		[HarmonyPatch(typeof(Hunger), "Serialize")]
+		[HarmonyPatch(typeof(SaveGameSystem), "SaveGlobalData")]
 		private static class HungerSerialize {
 
-			private static void Postfix(ref string __result) {
+			private static void Postfix(SaveSlotType gameMode, string name) {
 				HungerRevamped hungerRevamped = HungerRevamped.Instance;
-				HungerRevampedSaveDataProxy saveData = (HungerRevampedSaveDataProxy) m_HungerSaveDataProxy.GetValue(null);
 
-				saveData.storedCalories = hungerRevamped.storedCalories - Tuning.defaultStoredCalories;
-				saveData.wellFedHungerScore = hungerRevamped.wellFedHungerScore;
-				saveData.deferredFoodPoisonings = hungerRevamped.deferredFoodPoisonings.ToArray();
+				saveDataProxy.storedCalories = hungerRevamped.storedCalories - Tuning.defaultStoredCalories;
+				saveDataProxy.wellFedHungerScore = hungerRevamped.wellFedHungerScore;
+				saveDataProxy.deferredFoodPoisonings = hungerRevamped.deferredFoodPoisonings.ToArray();
 
-				__result = Utils.SerializeObject(saveData);
+				string json = JSON.Dump(saveDataProxy, EncodeOptions.NoTypeHints);
+				SaveGameSlots.SaveDataToSlot(gameMode, SaveGameSystem.m_CurrentEpisode, SaveGameSystem.m_CurrentGameId, name, SAVE_SLOT_NAME, json);
 			}
 		}
 	}

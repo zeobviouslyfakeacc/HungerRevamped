@@ -9,7 +9,7 @@ namespace HungerRevamped {
 
 		internal static CustomModeSettings settings;
 
-		public static void OnLoad() {
+		internal static void Initialize() {
 			settings = new CustomModeSettings();
 			settings.AddToCustomModeMenu(Position.BelowGameStart);
 		}

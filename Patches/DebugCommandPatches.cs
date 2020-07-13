@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using UnityEngine;
+using System;
 
 namespace HungerRevamped {
 	internal static class DebugCommandPatches {
@@ -7,13 +8,13 @@ namespace HungerRevamped {
 		[HarmonyPatch(typeof(ConsoleManager), "RegisterCommands")]
 		private static class AddConsoleCommands {
 			private static void Postfix() {
-				uConsole.RegisterCommandReturn("get_stored_calories", GetStoredCalories);
-				uConsole.RegisterCommand("set_stored_calories", SetStoredCalories);
-				uConsole.RegisterCommandReturn("get_calorie_burn", GetCalorieBurnRate);
-				uConsole.RegisterCommandReturn("get_calorie_transfer", GetCalorieTransferRate);
-				uConsole.RegisterCommandReturn("get_well_fed_hunger_score", GetWellFedHungerScore);
-				uConsole.RegisterCommand("set_well_fed_hunger_score", SetWellFedHungerScore);
-				uConsole.RegisterCommand("get_deferred_food_poisonings", GetDeferredFoodPoisonings);
+				uConsole.RegisterCommand("get_stored_calories", LogReturn(GetStoredCalories));
+				uConsole.RegisterCommand("set_stored_calories", new Action(SetStoredCalories));
+				uConsole.RegisterCommand("get_calorie_burn", LogReturn(GetCalorieBurnRate));
+				uConsole.RegisterCommand("get_calorie_transfer", LogReturn(GetCalorieTransferRate));
+				uConsole.RegisterCommand("get_well_fed_hunger_score", LogReturn(GetWellFedHungerScore));
+				uConsole.RegisterCommand("set_well_fed_hunger_score", new Action(SetWellFedHungerScore));
+				uConsole.RegisterCommand("get_deferred_food_poisonings", new Action(GetDeferredFoodPoisonings));
 			}
 
 			private static object GetStoredCalories() {
@@ -56,6 +57,13 @@ namespace HungerRevamped {
 					float dHours = dfp.start - timeNow;
 					uConsole.Log("Hour " + dfp.start + " caused by " + dfp.cause + " (in " + dHours + " hours)");
 				}
+			}
+
+			private static System.Action LogReturn(System.Func<object> commandReturn) {
+				return () => {
+					object result = commandReturn();
+					uConsole.Log(result == null ? "(null)" : result.ToString());
+				};
 			}
 		}
 	}

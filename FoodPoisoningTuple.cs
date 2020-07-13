@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace HungerRevamped {
 
-namespace HungerRevamped {
-
-	[Serializable]
-	internal struct DeferredFoodPoisoning {
+	public class DeferredFoodPoisoning {
 		public float start;
 		public string cause;
 	}

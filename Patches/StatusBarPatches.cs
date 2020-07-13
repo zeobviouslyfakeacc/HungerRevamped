@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Harmony;
+﻿using Harmony;
 
 namespace HungerRevamped {
 	internal static class StatusBarPatches {
@@ -36,41 +35,33 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(StatusBar), "SetSpriteColors")]
-		private static class SetStarvingSpriteColor {
-			private static void Postfix(StatusBar __instance, float fillValue) {
-				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger && fillValue > 0f && fillValue <= Tuning.hungerLevelStarving) {
+		[HarmonyPatch(typeof(StatusBar), "Update")]
+		private static class SetStatusBarVisuals {
+			private static void Postfix(StatusBar __instance) {
+				if (__instance.m_StatusBarType != StatusBar.StatusBarType.Hunger) return;
+
+				float fillValue = __instance.GetFillValue();
+				double storedCalories = HungerRevamped.Instance.storedCalories;
+
+				// Transferring calories out of calorie store
+				Utils.SetActive(__instance.m_DebuffObject, fillValue < Tuning.hungerLevelMalnourished && storedCalories > 0);
+				// Transferring calories into calorie store
+				Utils.SetActive(__instance.m_BuffObject, fillValue > Tuning.hungerLevelWellFed && storedCalories < Tuning.maximumStoredCalories);
+
+				// Starving hunger bar colors
+				if (fillValue < Tuning.hungerLevelStarving) {
 					__instance.m_OuterBoxSprite.color = GameManager.GetInterfaceManager().m_StatusOuterBoxEmptyColor;
-				}
-			}
-		}
-
-		[HarmonyPatch(typeof(StatusBar), "UpdateBacksplash")]
-		private static class SetStarvingVisuals {
-			private static readonly MethodInfo setActiveBacksplash = AccessTools.Method(typeof(StatusBar), "SetActiveBacksplash");
-
-			private static void Postfix(StatusBar __instance, float fillValue) {
-				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger && fillValue > 0f && fillValue <= Tuning.hungerLevelStarving) {
 					Utils.SetActive(__instance.m_SpriteWhenEmpty.gameObject, true);
-					setActiveBacksplash.Invoke(__instance, new[] { __instance.m_BacksplashDepleted });
+					__instance.SetActiveBacksplash(__instance.m_BacksplashDepleted);
 				}
 			}
 		}
 
-		[HarmonyPatch(typeof(StatusBar), "UpdateBacksplash")]
-		private static class ShowCalorieStoreSymbols {
-			private static void Postfix(StatusBar __instance, float fillValue) {
-				if (__instance.m_StatusBarType == StatusBar.StatusBarType.Hunger) {
-					double storedCalories = HungerRevamped.Instance.storedCalories;
-					Utils.SetActive(__instance.m_DebuffObject, fillValue <= Tuning.hungerLevelMalnourished && storedCalories > 0);
-					Utils.SetActive(__instance.m_BuffObject, fillValue > Tuning.hungerLevelWellFed && storedCalories < Tuning.maximumStoredCalories);
-				}
-			}
-		}
-
-		[HarmonyPatch(typeof(StatusBar), "GetRateOfChangeHunger")]
+		[HarmonyPatch(typeof(StatusBar), "GetRateOfChange")]
 		private static class FixHungerStatusArrows {
-			private static bool Prefix(ref float __result) {
+			private static bool Prefix(StatusBar __instance, ref float __result) {
+				if (__instance.m_StatusBarType != StatusBar.StatusBarType.Hunger) return true;
+
 				HungerRevamped hungerRevamped = HungerRevamped.Instance;
 				Hunger hunger = hungerRevamped.hunger;
 

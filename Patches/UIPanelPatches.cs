@@ -48,7 +48,7 @@ namespace HungerRevamped {
 				// Replace hunger bar calories with stored calories
 				double storedCalories = HungerRevamped.Instance.storedCalories;
 				__instance.m_CalorieStoreLabel.text = Convert.ToInt64(storedCalories).ToString();
-				__instance.m_CalorieStoreLabel.color = ((storedCalories < 250.0) ? red : Color.white);
+				__instance.m_CalorieStoreLabel.color = (storedCalories < 250.0) ? red : Color.white;
 
 				// Set status labels to red when below starving hunger ratio
 				Hunger hunger = HungerRevamped.Instance.hunger;
@@ -83,27 +83,24 @@ namespace HungerRevamped {
 				Hunger hunger = GameManager.GetHungerComponent();
 
 				float calorieBurnRate;
-				if ((bool) AccessTools.Field(typeof(Panel_Rest), "m_ShowPassTime").GetValue(__instance)) {
+				if (__instance.m_ShowPassTime) {
 					calorieBurnRate = playerManager.CalculateModifiedCalorieBurnRate(hunger.m_CalorieBurnPerHourStanding);
 				} else {
 					calorieBurnRate = playerManager.CalculateModifiedCalorieBurnRate(hunger.m_CalorieBurnPerHourSleeping);
 				}
 
-				HungerTuple simulation = lastSimulation;
 				if (!GameManager.GetPassTime().IsPassingTime()) {
-					int sleepHours = (int) AccessTools.Field(typeof(Panel_Rest), "m_SleepHours").GetValue(__instance);
-					simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, sleepHours);
-					lastSimulation = simulation;
+					lastSimulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, __instance.m_SleepHours);
 				}
 
 				UILabel storedCaloriesLabel = __instance.m_CalorieReservesLabel;
-				int storedCalories = Mathf.RoundToInt(simulation.storedCalories);
+				int storedCalories = Mathf.RoundToInt(lastSimulation.storedCalories);
 				storedCaloriesLabel.text = storedCalories.ToString();
 
 				UILabel hungerPercentLabel = __instance.m_EstimatedCaloriesBurnedLabel.GetComponent<UILabel>();
-				int hungerPercent = Mathf.FloorToInt(simulation.hungerRatio * 100f);
+				int hungerPercent = Mathf.FloorToInt(lastSimulation.hungerRatio * 100f);
 				hungerPercentLabel.text = hungerPercent.ToString() + "%";
-				hungerPercentLabel.color = (simulation.hungerRatio >= Tuning.hungerLevelStarving) ? Color.white : __instance.m_NegativeTemperatureColor;
+				hungerPercentLabel.color = (lastSimulation.hungerRatio >= Tuning.hungerLevelStarving) ? Color.white : __instance.m_NegativeTemperatureColor;
 			}
 		}
 
@@ -124,18 +121,16 @@ namespace HungerRevamped {
 			private static bool Prefix(Panel_BodyHarvest __instance) {
 				float origBurnRate = GameManager.GetHungerComponent().m_CalorieBurnPerHourHarvestingCarcass;
 				float calorieBurnRate = GameManager.GetPlayerManagerComponent().CalculateModifiedCalorieBurnRate(origBurnRate);
-				bool harvest = (bool) InvokeMethod(__instance, "IsTabHarvestSelected");
-				bool quarter = (bool) InvokeMethod(__instance, "IsTabQuarterSelected");
 
 				UILabel targetLabel = null;
 				float hours = 0;
 
-				if (harvest) {
+				if (__instance.IsTabHarvestSelected()) {
 					targetLabel = __instance.m_Label_HarvestEstimatedCalories;
-					hours = (float) InvokeMethod(__instance, "GetHarvestDurationMinutes") / 60f;
-				} else if (quarter) {
+					hours = __instance.GetHarvestDurationMinutes() / 60f;
+				} else if (__instance.IsTabQuarterSelected()) {
 					targetLabel = __instance.m_Label_QuarterEstimatedCalories;
-					hours = (float) InvokeMethod(__instance, "GetQuarterDurationMinutes") / 60f;
+					hours = __instance.GetQuarterDurationMinutes() / 60f;
 				}
 
 				HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, hours);
@@ -149,16 +144,12 @@ namespace HungerRevamped {
 
 				return false;
 			}
-
-			private static object InvokeMethod(Panel_BodyHarvest panel, string methodName) {
-				return AccessTools.Method(typeof(Panel_BodyHarvest), methodName).Invoke(panel, new object[0]);
-			}
 		}
 
 		// Panel_BreakDown
 
 		private static void UpdateBreakDownPanel(Panel_BreakDown panel) {
-			float hours = (float) AccessTools.Field(typeof(Panel_BreakDown), "m_DurationHours").GetValue(panel);
+			float hours = panel.m_DurationHours;
 			float origBurnRate = GameManager.GetHungerComponent().m_CalorieBurnPerHourBreakingDown;
 			float calorieBurnRate = GameManager.GetPlayerManagerComponent().CalculateModifiedCalorieBurnRate(origBurnRate);
 			HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, hours);
@@ -182,7 +173,7 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(Panel_IceFishing), "UpdateEstimatedCaloriesBurnedLabel")]
+		[HarmonyPatch(typeof(Panel_BreakDown), "UpdateEstimatedCaloriesBurnedLabel")]
 		private static class DisableBreakDownUpdateEstimatedCaloriesBurnedLabel {
 			private static bool Prefix() {
 				return false;
@@ -192,7 +183,7 @@ namespace HungerRevamped {
 		// Panel_IceFishing
 
 		private static void UpdateIceFishingPanel(Panel_IceFishing panel) {
-			int hours = (int) AccessTools.Field(typeof(Panel_IceFishing), "m_HoursToFish").GetValue(panel);
+			int hours = panel.m_HoursToFish;
 			float origBurnRate = GameManager.GetHungerComponent().m_CalorieBurnPerHourStanding;
 			float calorieBurnRate = GameManager.GetPlayerManagerComponent().CalculateModifiedCalorieBurnRate(origBurnRate);
 			HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, hours);
@@ -245,7 +236,7 @@ namespace HungerRevamped {
 		}
 
 		private static void UpdateSnowShelterBuildPanel(Panel_SnowShelterBuild panel) {
-			float hours = (float) AccessTools.Field(typeof(Panel_SnowShelterBuild), "m_DurationHours").GetValue(panel);
+			float hours = panel.m_DurationHours;
 			float origBurnRate = GameManager.GetHungerComponent().m_CalorieBurnPerHourBuildingSnowShelter;
 			float calorieBurnRate = GameManager.GetPlayerManagerComponent().CalculateModifiedCalorieBurnRate(origBurnRate);
 			HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, hours);
@@ -289,8 +280,8 @@ namespace HungerRevamped {
 		}
 
 		private static void UpdateSnowShelterInteractPanel(Panel_SnowShelterInteract panel) {
-			float hours = (float) AccessTools.Method(typeof(Panel_SnowShelterInteract), "GetTaskDurationInHours").Invoke(panel, new object[0]);
-			float origBurnRate = (float) AccessTools.Method(typeof(Panel_SnowShelterInteract), "GetCalorieBurnRate").Invoke(panel, new object[0]);
+			float hours = panel.GetTaskDurationInHours();
+			float origBurnRate = panel.GetCalorieBurnRate();
 			float calorieBurnRate = GameManager.GetPlayerManagerComponent().CalculateModifiedCalorieBurnRate(origBurnRate);
 			HungerTuple simulation = HungerRevamped.Instance.SimulateHungerBar(calorieBurnRate, hours);
 

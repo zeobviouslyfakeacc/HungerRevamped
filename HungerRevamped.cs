@@ -16,7 +16,6 @@ namespace HungerRevamped {
 				instance = value;
 			}
 		}
-		internal static bool HasInstance() => instance != null;
 
 		internal readonly Hunger hunger;
 		internal readonly List<DeferredFoodPoisoning> deferredFoodPoisonings;

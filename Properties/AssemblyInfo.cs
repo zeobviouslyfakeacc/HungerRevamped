@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using MelonLoader;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("HungerRevamped")]
@@ -13,3 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("76e55258-60b2-4882-8e97-3840eb706dae")]
 [assembly: AssemblyVersion("1.6.0.0")]
 [assembly: AssemblyFileVersion("1.6.0.0")]
+[assembly: MelonModInfo(typeof(HungerRevamped.HungerRevampedMod), "HungerRevamped", "1.6.0.0", "zeobviouslyfakeacc")]
+[assembly: MelonModGame("Hinterland", "TheLongDark")]
