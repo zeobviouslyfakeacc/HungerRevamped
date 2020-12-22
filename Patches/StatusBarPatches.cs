@@ -14,22 +14,10 @@ namespace HungerRevamped {
 				UISprite buff = statusBar.m_BuffObject.GetComponent<UISprite>();
 				buff.color = new UnityEngine.Color(0f, 0.429f, 0.276f); // Same green as carry weight buff
 
-				// The buff object has a nice "plus" sprite, but there's no minus sprite...
-				// So let's create our own by cutting off 27 pixels from the top and the bottom of that plus sprite
-				UISpriteData debuffData = new UISpriteData();
-				debuffData.CopyFrom(buff.GetAtlasSprite());
-				debuffData.name = "ico_Status_BuffMinus";
-				debuffData.paddingTop = 27;
-				debuffData.paddingBottom = 27;
-				debuffData.y += debuffData.paddingTop;
-				debuffData.height -= debuffData.paddingTop + debuffData.paddingBottom;
-				buff.atlas.spriteList.Add(debuffData);
-				buff.atlas.MarkSpriteListAsChanged();
-
 				UISprite debuff = statusBar.m_DebuffObject.GetComponent<UISprite>();
-				debuff.spriteName = "ico_Status_BuffMinus";
-				debuff.height = buff.height;
-				debuff.width = buff.width;
+				debuff.spriteName = "inv_statBack";
+				debuff.height = (int) (buff.height * 0.2);
+				debuff.width = (int) (buff.width * 0.45);
 				debuff.transform.localPosition = buff.transform.localPosition;
 				debuff.color = new UnityEngine.Color(0.64f, 0.2f, 0.23f); // m_StatusMainSpriteBelowThresholdColor
 			}
