@@ -6,7 +6,7 @@ namespace HungerRevamped {
 
 		public override void OnApplicationStart() {
 			CustomModeSettings.Initialize();
-			Debug.Log($"[{InfoAttribute.Name}] version {InfoAttribute.Version} loaded!");
+			Debug.Log($"[{Info.Name}] version {Info.Version} loaded!");
 		}
 	}
 }

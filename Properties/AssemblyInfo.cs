@@ -14,5 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("76e55258-60b2-4882-8e97-3840eb706dae")]
 [assembly: AssemblyVersion("1.7.0.0")]
 [assembly: AssemblyFileVersion("1.7.0.0")]
-[assembly: MelonModInfo(typeof(HungerRevamped.HungerRevampedMod), "HungerRevamped", "1.7.0.0", "zeobviouslyfakeacc")]
-[assembly: MelonModGame("Hinterland", "TheLongDark")]
+[assembly: MelonInfo(typeof(HungerRevamped.HungerRevampedMod), "HungerRevamped", "1.7.0.0", "zeobviouslyfakeacc")]
+[assembly: MelonGame("Hinterland", "TheLongDark")]
