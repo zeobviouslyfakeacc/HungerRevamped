@@ -3,6 +3,8 @@
 namespace HungerRevamped {
 	internal static class GameStatePatches {
 
+		internal static bool IsApplyingDeferredFoodPoisoning = false;
+
 		[HarmonyPatch(typeof(Hunger), "Start")]
 		private static class HungerStart {
 			private static void Prefix(Hunger __instance) {
@@ -58,26 +60,28 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(GearItem), "RollForFoodPoisoning")]
-		private static class DelayFoodPoisoningStart {
-			private static void Postfix(GearItem __instance, ref bool __result) {
-				if (__result) {
-					HungerRevamped.Instance.AddFoodPoisoningCall(__instance.m_LocalizedDisplayName.m_LocalizationID);
-					__result = false; // shh, later
+		[HarmonyPatch(typeof(FoodPoisoning), "FoodPoisoningStart")]
+		private static class HandleDeferredFoodPoisoning {
+
+			// Defer food poisoning when acquired by eating food
+			private static bool Prefix(string causeId, ref bool __state) {
+				if (IsApplyingDeferredFoodPoisoning || causeId == "GAMEPLAY_TaintedFood") {
+					return true; // either a console command or applying the deferred food poisoning
+				} else {
+					HungerRevamped.Instance.AddFoodPoisoningCall(causeId);
+					return false; // shh, later
 				}
 			}
-		}
 
-		[HarmonyPatch(typeof(FoodPoisoning), "FoodPoisoningStart")]
-		private static class WakeUpPlayerOnFoodPoisoning {
-			private static void Postfix() {
+			// Wake the player up when applying deferred food poisoning while asleep
+			private static void Postfix(ref bool __state) {
 				if (GameManager.GetPlayerManagerComponent().PlayerIsDead() || InterfaceManager.m_Panel_ChallengeComplete.IsEnabled())
 					return;
 				if (GameManager.InCustomMode() && !GameManager.GetCustomMode().m_EnableFoodPoisoning)
 					return;
 
 				Rest rest = GameManager.GetRestComponent();
-				if (rest.IsSleeping()) {
+				if (rest.IsSleeping() && IsApplyingDeferredFoodPoisoning) {
 					rest.EndSleeping(true);
 				}
 			}

@@ -175,7 +175,9 @@ namespace HungerRevamped {
 
 				if (currentTimeHours > foodPoisoning.start) {
 					deferredFoodPoisonings.RemoveAt(i);
+					GameStatePatches.IsApplyingDeferredFoodPoisoning = true;
 					GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(foodPoisoning.cause, true, false);
+					GameStatePatches.IsApplyingDeferredFoodPoisoning = false;
 				}
 			}
 		}
