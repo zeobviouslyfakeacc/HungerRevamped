@@ -60,33 +60,6 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(FoodPoisoning), "FoodPoisoningStart")]
-		private static class HandleDeferredFoodPoisoning {
-
-			// Defer food poisoning when acquired by eating food
-			private static bool Prefix(string causeId, ref bool __state) {
-				if (IsApplyingDeferredFoodPoisoning || causeId == "GAMEPLAY_TaintedFood") {
-					return true; // either a console command or applying the deferred food poisoning
-				} else {
-					HungerRevamped.Instance.AddFoodPoisoningCall(causeId);
-					return false; // shh, later
-				}
-			}
-
-			// Wake the player up when applying deferred food poisoning while asleep
-			private static void Postfix(ref bool __state) {
-				if (GameManager.GetPlayerManagerComponent().PlayerIsDead() || InterfaceManager.m_Panel_ChallengeComplete.IsEnabled())
-					return;
-				if (GameManager.InCustomMode() && !GameManager.GetCustomMode().m_EnableFoodPoisoning)
-					return;
-
-				Rest rest = GameManager.GetRestComponent();
-				if (rest.IsSleeping() && IsApplyingDeferredFoodPoisoning) {
-					rest.EndSleeping(true);
-				}
-			}
-		}
-
 		[HarmonyPatch(typeof(PlayerManager), "FirstAidConsumed")]
 		private static class ClearDeferredFoodPoisoningsWhenConsumingAntibiotics {
 			private static void Postfix(GearItem gi) {

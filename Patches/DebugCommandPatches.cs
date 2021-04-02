@@ -59,7 +59,7 @@ namespace HungerRevamped {
 				}
 			}
 
-			private static System.Action LogReturn(System.Func<object> commandReturn) {
+			private static Action LogReturn(Func<object> commandReturn) {
 				return () => {
 					object result = commandReturn();
 					uConsole.Log(result == null ? "(null)" : result.ToString());
