@@ -68,7 +68,7 @@ namespace HungerRevamped {
 
 		internal static float GetCalorieBurnRateMultiplier(float storedCalorieRatio) {
 			float xSqr = storedCalorieRatio * storedCalorieRatio;
-			return 0.95f + 0.4f * xSqr;
+			return (0.95f + 0.4f * xSqr) * MenuSettings.settings.calorieBurnRateMultiplier;
 		}
 
 		internal static float GetWellFedHungerScoreChange(float hungerRatio) {

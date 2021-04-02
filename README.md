@@ -83,6 +83,37 @@ This is especially important when **sleeping**. To let your health regenerate,
 you need to avoid starvation. You should thus ensure that your hunger bar stays
 more than 20% full – if possible.
 
+#### Cooking Skill Points
+
+Cooking ruined food gives no skill points. Cooking a partial portion (less than 1 kilogram) of meat gives a corresponding
+chance of awarding a skill. In other words, cooking 5 kilograms of meat gives 5 skill points (on average) regardless
+of how you cook it.
+
+#### Delayed Food Poisoning
+
+Hunger Revamped implements a delayed food poisoning system. This means that you won't get food poisoning right away,
+but instead it shows several hours later. 
+
+#### Realistic Food Poisoning Setting
+
+In addition, there is a realistic food poisoning setting which makes the probability of food poisoning gradually 
+increase as condition decreases. Under this setting, food poisoning probability is also scaled by the proportion eaten. 
+In other words, eating half as much is half as likely to give you food poisoning. This setting also disables the 
+strange immunity to food poisoning at Cooking Level 5;
+
+#### Ruined Food Settings
+
+There are settings to make ruined food inedible and/or uncookable.
+
+#### Calorie Burn Rate Setting
+
+In cold weather environments such as Antarctica, researchers often have to consume significantly more calories than they
+otherwise would in warm environments. In respect to that reality, there is a setting to scale your daily calorie needs.
+
+#### Harvestable Cans
+
+Canned food items can be harvested for their recycled can if the player cannot (or doesn't want to) eat them.
+
 ### Installation
 
 1. If you haven't done so already, install MelonLoader by downloading and running [MelonLoader.Installer.exe](https://github.com/HerpDerpinstine/MelonLoader/releases/latest/download/MelonLoader.Installer.exe)
