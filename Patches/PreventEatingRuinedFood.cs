@@ -18,7 +18,6 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(Panel_Inventory), "OnEquip")]
 		private static class DontAllowUseAtZeroHP {
-
 			private static bool Prefix(Panel_Inventory __instance) {
 				if (MenuSettings.settings.canEatRuinedFood) return true;
 				GearItem gi = __instance.GetCurrentlySelectedGearItem();
@@ -32,9 +31,7 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(PlayerManager), "CanUseFoodInventoryItem", new Type[] { typeof(GearItem) })]
 		private static class PreventnUseFoodInventoryItem {
-
-			private static bool Prefix(ref bool __result, GearItem gi)
-			{
+			private static bool Prefix(ref bool __result, GearItem gi) {
 				if (MenuSettings.settings.canEatRuinedFood) return true;
 				if (gi.IsWornOut()) {
 					GameAudioManager.PlayGUIError();
@@ -47,9 +44,7 @@ namespace HungerRevamped {
 
 		[HarmonyPatch(typeof(ItemDescriptionPage), "GetEquipButtonLocalizationId", new Type[] { typeof(GearItem) })]
 		private static class DontShowEatButtonForRuinedFood {
-
-			private static bool Prefix(ref string __result, GearItem gi)
-			{
+			private static bool Prefix(ref string __result, GearItem gi) {
 				if (MenuSettings.settings.canEatRuinedFood) return true;
 				if (gi && gi.m_FoodItem && gi.IsWornOut()) {
 					__result = string.Empty;

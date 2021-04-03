@@ -15,12 +15,10 @@ namespace HungerRevamped {
 	 * So let's fix this:
 	 */
 
-	internal static class Watch_OnEatingComplete
-    {
+	internal static class Watch_OnEatingComplete {
 		internal static bool isExecuting = false;
 
-		internal static bool CustomRollForFoodPoisoning(GearItem gearItem, float startingCalories, float progress)
-		{
+		internal static bool CustomRollForFoodPoisoning(GearItem gearItem, float startingCalories, float progress) {
 			FoodItem foodItem = gearItem.m_FoodItem;
 			
 			if (!foodItem || startingCalories < 5f) return false;
@@ -43,8 +41,7 @@ namespace HungerRevamped {
 			return randomValue < chanceFoodPoisioning;
 		}
 
-		private static float GetFoodPoisoningChance(float lowChance, float highChance, float condition)
-		{
+		private static float GetFoodPoisoningChance(float lowChance, float highChance, float condition) {
 			float chanceAt45Percent = lowChance;
 			float chanceAt25Percent = Mathf.Min(2 * lowChance, highChance);
 			float chanceAt15Percent = highChance;
@@ -61,17 +58,14 @@ namespace HungerRevamped {
 
 	[HarmonyPatch(typeof(PlayerManager),"OnEatingComplete")]
 	internal static class FoodPoisoningChanceFix {
-		private static void Prefix()
-		{
+		private static void Prefix() {
 			if (!MenuSettings.settings.realisticFoodPoisoningChance) return;
 			Watch_OnEatingComplete.isExecuting = true;
         }
-		private static void Postfix(PlayerManager __instance,float progress)
-		{
+		private static void Postfix(PlayerManager __instance,float progress) {
 			if (!MenuSettings.settings.realisticFoodPoisoningChance) return;
 			Watch_OnEatingComplete.isExecuting = false;
-			if (Watch_OnEatingComplete.CustomRollForFoodPoisoning(__instance.m_FoodItemEaten, __instance.m_FoodItemEatenStartingCalories, progress))
-			{
+			if (Watch_OnEatingComplete.CustomRollForFoodPoisoning(__instance.m_FoodItemEaten, __instance.m_FoodItemEatenStartingCalories, progress)) {
 				GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(__instance.m_FoodItemEaten.m_LocalizedDisplayName.m_LocalizationID, true, false);
 			}
         }

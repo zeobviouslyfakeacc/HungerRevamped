@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ModSettings;
 
-namespace HungerRevamped
-{
-    internal class MenuSettings : JsonModSettings
-    {
+namespace HungerRevamped {
+    internal class MenuSettings : JsonModSettings {
         [Name("Calorie Burn Rate Multiplier")]
         [Description("Multiplies the rate at which you expend calories. Default = 1")]
         [Slider(0.1f, 3f, 30)]
@@ -28,8 +26,7 @@ namespace HungerRevamped
 
         internal static MenuSettings settings;
 
-        internal static void Initialize()
-        {
+        internal static void Initialize() {
             settings = new MenuSettings();
             settings.AddToModSettings("Hunger Revamped");
         }

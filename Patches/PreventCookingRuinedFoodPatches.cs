@@ -5,22 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HungerRevamped
-{
-    class PreventCookingRuinedFoodPatches
-    {
+namespace HungerRevamped {
+    class PreventCookingRuinedFoodPatches {
 		[HarmonyPatch(typeof(CookingPotItem), "SetCookedGearProperties", new Type[] { typeof(GearItem), typeof(GearItem) })]
-		private static class RuinedFoodRemainsRuinedWhenCooked
-		{
-
-			private static void Postfix(GearItem rawItem, GearItem cookedItem)
-			{
+		private static class RuinedFoodRemainsRuinedWhenCooked {
+			private static void Postfix(GearItem rawItem, GearItem cookedItem) {
 				if (MenuSettings.settings.canCookRuinedFood) return;
-				if (!rawItem || !cookedItem)
-					return;
+				if (!rawItem || !cookedItem) return;
 
-				if (rawItem.IsWornOut())
-				{
+				if (rawItem.IsWornOut()) {
 					cookedItem.ForceWornOut();
 					cookedItem.UpdateDamageShader();
 				}
@@ -28,11 +21,8 @@ namespace HungerRevamped
 		}
 
 		[HarmonyPatch(typeof(Cookable), "MaybeStartWarmingUpDueToNearbyFire")]
-		private static class PreventWarmingUpRuinedFood
-		{
-
-			private static bool Prefix(Cookable __instance)
-			{
+		private static class PreventWarmingUpRuinedFood {
+			private static bool Prefix(Cookable __instance) {
 				if (MenuSettings.settings.canCookRuinedFood) return true;
 				GearItem gearItem = __instance.GetComponent<GearItem>();
 				return !gearItem.IsWornOut(); // Do not run original method when item is ruined

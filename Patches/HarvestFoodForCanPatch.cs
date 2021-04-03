@@ -15,16 +15,12 @@ namespace HungerRevamped
 		// the food inside the can may be ruined, the can itself should still be usable.
 		//
 
-		[HarmonyPatch(typeof(FoodItem), "Awake")]//works
-		private static class AllowBreakingDownFoodForContainer
-		{
-
-			private static void Postfix(FoodItem __instance)
-			{
+		[HarmonyPatch(typeof(FoodItem), "Awake")]
+		private static class AllowBreakingDownFoodForContainer {
+			private static void Postfix(FoodItem __instance) {
 				GameObject item = __instance.gameObject;
 
-				if (!item.GetComponent<Harvest>() && __instance.m_GearPrefabHarvestAfterFinishEatingNormal)
-				{
+				if (!item.GetComponent<Harvest>() && __instance.m_GearPrefabHarvestAfterFinishEatingNormal) {
 					GearItem resultItem = __instance.m_GearPrefabHarvestAfterFinishEatingNormal.GetComponent<GearItem>();
 
 					Harvest harvest = item.AddComponent<Harvest>();

@@ -67,9 +67,8 @@ namespace HungerRevamped {
 			private static bool Prefix(string causeId, ref bool __state) {
 				if (MenuSettings.settings.realisticFoodPoisoningChance && Watch_OnEatingComplete.isExecuting) {
 					return false; // do nothing if executed before the postfix for OnEatingComplete with modified food poisoning chances on
-								  // need to wait for the postfix to decide if the player will get food poisoning
-				} else if (IsApplyingDeferredFoodPoisoning || causeId == "GAMEPLAY_TaintedFood")
-				{
+					              // need to wait for the postfix to decide if the player will get food poisoning
+				} else if (IsApplyingDeferredFoodPoisoning || causeId == "GAMEPLAY_TaintedFood") {
 					return true; // either a console command or applying the deferred food poisoning
 				} else {
 					HungerRevamped.Instance.AddFoodPoisoningCall(causeId);
