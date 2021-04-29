@@ -45,7 +45,7 @@
     <Reference Include="MelonLoader.ModHandler">
       <Private>False</Private>
     </Reference>
-    <Reference Include="ModSettings">
+    <Reference Include="ModSettings, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

@@ -24,6 +24,10 @@ namespace HungerRevamped {
         [Description("Reworks the food poisoning probabilities to be more gradual. 75% and higher is still risk free. 45% is low risk. 25% is medium risk. 15% and lower is high risk. Risk scales with the amount eaten.")]
         public bool realisticFoodPoisoningChance = true;
 
+        [Name("Fix Cooking Skill Exploit")]
+        [Description("Skill points are awarded by proportional probability. For example, cooking 0.5 kilograms of meat has a 50% probability of giving a skill point. Cooking ruined food will give no points.")]
+        public bool fixCookingSkillExploit = true;
+
         internal static MenuSettings settings;
 
         internal static void Initialize() {
