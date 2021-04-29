@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ModSettings;
+﻿using ModSettings;
 
 namespace HungerRevamped {
     internal class MenuSettings : JsonModSettings {
@@ -13,11 +8,11 @@ namespace HungerRevamped {
         public float calorieBurnRateMultiplier = 1f;
 
         [Name("Can eat ruined food")]
-        [Description("All ruined food is inedible and useless except for maybe harvesting recycled cans.")]
+        [Description("All ruined food is inedible and useless except for harvesting recycled cans.")]
         public bool canEatRuinedFood = false;
 
         [Name("Can cook ruined food")]
-        [Description("Note: If no, you will still be able to place the food on the fire and \"cook\" the item. However, the cooked item will still be ruined, and no skill points will be awarded.")]
+        [Description("Note: If no, you will still be able to place the food on the fire and \"cook\" the item. However, the cooked item will still be ruined.")]
         public bool canCookRuinedFood = false;
 
         [Name("Realistic Food Poisoning Chance")]
@@ -27,6 +22,10 @@ namespace HungerRevamped {
         [Name("Fix Cooking Skill Exploit")]
         [Description("Skill points are awarded by proportional probability. For example, cooking 0.5 kilograms of meat has a 50% probability of giving a skill point. Cooking ruined food will give no points.")]
         public bool fixCookingSkillExploit = true;
+
+        [Name("Cooking Doubles Condition")]
+        [Description("Rather than increasing the condition by 50%, condition is doubled.")]
+        public bool cookingDoublesCondition = true;
 
         internal static MenuSettings settings;
 

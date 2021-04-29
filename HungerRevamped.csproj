@@ -65,6 +65,7 @@
     <Compile Include="HungerRevampedMod.cs" />
     <Compile Include="HungerTuple.cs" />
     <Compile Include="MenuSettings.cs" />
+    <Compile Include="Patches\CookingConditionFix.cs" />
     <Compile Include="Patches\DebugCommandPatches.cs" />
     <Compile Include="HungerRevamped.cs" />
     <Compile Include="HungerRevampedSaveDataProxy.cs" />
