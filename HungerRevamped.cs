@@ -40,7 +40,7 @@ namespace HungerRevamped {
 			string typeName = System.Reflection.Assembly.CreateQualifiedName("RelentlessNight", "RelentlessNight.RnGl");
 			Type rnGlobals = Type.GetType(typeName, false);
 			if (rnGlobals == null) return false;
-			return (bool) Harmony.AccessTools.Field(rnGlobals, "rnActive").GetValue(null);
+			return (bool) HarmonyLib.AccessTools.Field(rnGlobals, "rnActive").GetValue(null);
 		}
 
 		internal void Update() {

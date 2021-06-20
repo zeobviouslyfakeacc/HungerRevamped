@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 
 namespace HungerRevamped {
 	internal static class GameStatePatches {

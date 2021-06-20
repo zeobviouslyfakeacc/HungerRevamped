@@ -42,7 +42,7 @@
     <Reference Include="Il2CppSystem">
       <Private>False</Private>
     </Reference>
-    <Reference Include="MelonLoader.ModHandler">
+    <Reference Include="MelonLoader">
       <Private>False</Private>
     </Reference>
     <Reference Include="ModSettings">
