@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using HarmonyLib;
-using UnhollowerBaseLib;
 using UnityEngine;
 
 namespace HungerRevamped {
@@ -12,18 +10,6 @@ namespace HungerRevamped {
 	 */
 
 	internal static class UIPanelPatches {
-
-		[DllImport("GameAssembly", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-		public static extern void il2cpp_gc_wbarrier_set_field(IntPtr obj, IntPtr targetAddress, IntPtr value);
-
-		private static IntPtr KeyAddr(UILocalize localize) {
-			ulong ptr = (ulong) IL2CPP.Il2CppObjectBaseToPtrNotNull(localize) + IL2CPP.il2cpp_field_get_offset((IntPtr) AccessTools.Field(typeof(UILocalize), "NativeFieldInfoPtr_key").GetValue(null));
-			return (IntPtr) ptr;
-		}
-
-		public static void SetKey(UILocalize localize, string value) {
-			il2cpp_gc_wbarrier_set_field(localize.Pointer, KeyAddr(localize), IL2CPP.ManagedStringToIl2Cpp(value));
-		}
 
 		// Panel_FirstAid
 
@@ -40,8 +26,7 @@ namespace HungerRevamped {
 				icon.spriteName = "ico_status_hunger4"; // old: ico_HUD_hunger, ico_Radial_food2
 				icon.transform.localPosition += new Vector3(-1, 0); // Tiny position nudge to center icon properly
 				UILocalize nameLabel = storedCaloriesRow.transform.Find("Stat Label").GetComponent<UILocalize>();
-				//nameLabel.key = "GAMEPLAY_CalorieStore";
-				SetKey(nameLabel, "GAMEPLAY_CalorieStore");
+				nameLabel.key = "GAMEPLAY_CalorieStore";
 
 				const float basePos = 24;
 				airTempRow.transform.localPosition = new Vector3(0, basePos, 0);
@@ -125,8 +110,7 @@ namespace HungerRevamped {
 				Transform parentTransform = __instance.m_EstimatedCaloriesBurnedLabel.transform.parent;
 				GameObject gameObject = parentTransform.Find("Label_CaloriesBurned").gameObject;
 				UILocalize localize = gameObject.GetComponent<UILocalize>();
-				//localize.key = "GAMEPLAY_Hunger";
-				SetKey(localize, "GAMEPLAY_Hunger");
+				localize.key = "GAMEPLAY_Hunger";
 			}
 		}
 
@@ -243,13 +227,11 @@ namespace HungerRevamped {
 		private static class SetSnowShelterBuildLabels {
 			private static void Postfix(Panel_SnowShelterBuild __instance) {
 				UILocalize calorieStoreHeader = __instance.m_CurrentCaloriesLabel.GetComponent<UILocalize>();
-				//calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
-				SetKey(calorieStoreHeader, "GAMEPLAY_CalorieStore");
+				calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
 
 				Transform estimatedCaloriesHeader = __instance.m_EstimatedCaloriesBurnedLabel.transform.parent.Find("Header");
 				UILocalize localize = estimatedCaloriesHeader.GetComponent<UILocalize>();
-				//localize.key = "GAMEPLAY_Hunger";
-				SetKey(localize, "GAMEPLAY_Hunger");
+				localize.key = "GAMEPLAY_Hunger";
 			}
 		}
 
@@ -289,13 +271,11 @@ namespace HungerRevamped {
 		private static class SetSnowShelterInteractLabels {
 			private static void Postfix(Panel_SnowShelterInteract __instance) {
 				UILocalize calorieStoreHeader = __instance.m_CurrentCaloriesLabel.GetComponent<UILocalize>();
-				//calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
-				SetKey(calorieStoreHeader, "GAMEPLAY_CalorieStore");
+				calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
 
 				Transform estimatedCaloriesHeader = __instance.m_EstimatedCaloriesBurnedLabel.transform.parent.Find("Header");
 				UILocalize localize = estimatedCaloriesHeader.GetComponent<UILocalize>();
-				//localize.key = "GAMEPLAY_Hunger";
-				SetKey(localize, "GAMEPLAY_Hunger");
+				localize.key = "GAMEPLAY_Hunger";
 			}
 		}
 
