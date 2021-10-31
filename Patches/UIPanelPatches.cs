@@ -13,9 +13,14 @@ namespace HungerRevamped {
 
 		// Panel_FirstAid
 
-		[HarmonyPatch(typeof(Panel_FirstAid), "Start")]
+		[HarmonyPatch(typeof(Panel_FirstAid), "Enable", new Type[] { typeof(bool) })]
 		private static class AddStoredCaloriesLabel {
+			private static bool initialized = false;
+
 			private static void Prefix(Panel_FirstAid __instance) {
+				if (initialized) return;
+				initialized = true;
+
 				Transform airTempRow = __instance.m_AirTempLabel.transform.parent;
 				Transform windChillRow = __instance.m_WindchillLabel.transform.parent;
 				Transform feelsLikeRow = __instance.m_FeelsLikeLabel.transform.parent;
@@ -43,7 +48,7 @@ namespace HungerRevamped {
 
 			private static void Postfix(Panel_FirstAid __instance) {
 				Color red = __instance.m_PoorHealthStatusColor;
-				Color green = InterfaceManager.m_Panel_ActionsRadial.m_FirstAidBuffColor;
+				Color green = InterfaceManager.m_FirstAidBuffColor;
 
 				// Replace hunger bar calories with stored calories
 				double storedCalories = HungerRevamped.Instance.storedCalories;
@@ -104,9 +109,14 @@ namespace HungerRevamped {
 			}
 		}
 
-		[HarmonyPatch(typeof(Panel_Rest), "Start", new Type[0])]
+		[HarmonyPatch(typeof(Panel_Rest), "Enable", new Type[] { typeof(bool) })]
 		private static class ChangeRestHungerLabel {
+			private static bool initialized = false;
+
 			private static void Postfix(Panel_Rest __instance) {
+				if (initialized) return;
+				initialized = true;
+
 				Transform parentTransform = __instance.m_EstimatedCaloriesBurnedLabel.transform.parent;
 				GameObject gameObject = parentTransform.Find("Label_CaloriesBurned").gameObject;
 				UILocalize localize = gameObject.GetComponent<UILocalize>();
@@ -223,9 +233,14 @@ namespace HungerRevamped {
 
 		// Panel_SnowShelterBuild
 
-		[HarmonyPatch(typeof(Panel_SnowShelterBuild), "Start")]
+		[HarmonyPatch(typeof(Panel_SnowShelterBuild), "Enable", new Type[] { typeof(bool) })]
 		private static class SetSnowShelterBuildLabels {
+			private static bool initialized = false;
+
 			private static void Postfix(Panel_SnowShelterBuild __instance) {
+				if (initialized) return;
+				initialized = true;
+
 				UILocalize calorieStoreHeader = __instance.m_CurrentCaloriesLabel.GetComponent<UILocalize>();
 				calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
 
@@ -267,9 +282,14 @@ namespace HungerRevamped {
 
 		// Panel_SnowShelterInteract
 
-		[HarmonyPatch(typeof(Panel_SnowShelterInteract), "Start")]
+		[HarmonyPatch(typeof(Panel_SnowShelterInteract), "Enable", new Type[] { typeof(bool) })]
 		private static class SetSnowShelterInteractLabels {
+			private static bool initialized = false;
+
 			private static void Postfix(Panel_SnowShelterInteract __instance) {
+				if (initialized) return;
+				initialized = true;
+
 				UILocalize calorieStoreHeader = __instance.m_CurrentCaloriesLabel.GetComponent<UILocalize>();
 				calorieStoreHeader.key = "GAMEPLAY_CalorieStore";
 
