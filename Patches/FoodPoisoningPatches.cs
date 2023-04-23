@@ -28,7 +28,7 @@ namespace HungerRevamped {
 
 		// Wake the player up when applying (deferred) food poisoning while asleep
 		private static void Postfix() {
-			if (GameManager.GetPlayerManagerComponent().PlayerIsDead() || InterfaceManager.m_Panel_ChallengeComplete.IsEnabled()) return;
+			if (GameManager.GetPlayerManagerComponent().PlayerIsDead() || InterfaceManager.IsPanelEnabled<Panel_ChallengeComplete>()) return;
 			if (GameManager.InCustomMode() && !GameManager.GetCustomMode().m_EnableFoodPoisoning) return;
 			if (disableFoodPoisoning) return;
 

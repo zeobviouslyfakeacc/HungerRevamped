@@ -44,7 +44,7 @@ namespace HungerRevamped {
 
 			private static void Postfix(Panel_FirstAid __instance) {
 				Color red = __instance.m_PoorHealthStatusColor;
-				Color green = InterfaceManager.m_Panel_ActionsRadial.m_FirstAidBuffColor;
+				Color green = InterfaceManager.m_FirstAidBuffColor;
 
 				// Replace hunger bar calories with stored calories
 				double storedCalories = HungerRevamped.Instance.storedCalories;
