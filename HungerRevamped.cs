@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Il2Cpp;
 
 namespace HungerRevamped {
 	public class HungerRevamped {
