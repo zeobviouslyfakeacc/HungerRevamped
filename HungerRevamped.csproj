@@ -33,4 +33,7 @@
 		<!--The package version here in this template may be outdated and need to be updated. Visual Studio can update package versions automatically.-->
 		<!--If the mod references any other mods (such as ModSettings), that NuGet package will also need to be listed here.-->
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Utils\" />
+	</ItemGroup>
 </Project>

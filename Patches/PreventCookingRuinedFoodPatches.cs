@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using Il2Cpp;
 
 namespace HungerRevamped {
 	internal static class PreventCookingRuinedFoodPatches {
