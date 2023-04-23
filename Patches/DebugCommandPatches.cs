@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using System;
+using Il2Cpp;
 
 namespace HungerRevamped {
 	internal static class DebugCommandPatches {

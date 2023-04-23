@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
+using Il2Cpp;
 
 namespace HungerRevamped {
 
@@ -74,9 +75,9 @@ namespace HungerRevamped {
 
 			if (giveFoodPoisoning) {
 				if (MenuSettings.settings.delayedFoodPoisoning) {
-					HungerRevamped.Instance.AddFoodPoisoningCall(foodItemEaten.m_LocalizedDisplayName.m_LocalizationID);
+					HungerRevamped.Instance.AddFoodPoisoningCall(foodItemEaten.GearItemData.DisplayNameLocID);
 				} else {
-					GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(foodItemEaten.m_LocalizedDisplayName.m_LocalizationID, true, false);
+					GameManager.GetFoodPoisoningComponent().FoodPoisoningStart(foodItemEaten.GearItemData.DisplayNameLocID, true, false);
 				}
 			}
 		}
@@ -100,7 +101,7 @@ namespace HungerRevamped {
 
 			float chanceFoodPoisioning = GetFoodPoisoningChance(lowChance, highChance, condition) / 100f;
 			float scaledChance = 1f - Mathf.Pow(1f - chanceFoodPoisioning, proportionEaten);
-			return Random.value < scaledChance;
+			return UnityEngine.Random.value < scaledChance;
 		}
 
 		private static float GetFoodPoisoningChance(float lowChance, float highChance, float condition) {

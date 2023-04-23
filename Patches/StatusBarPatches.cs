@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Il2Cpp;
 
 namespace HungerRevamped {
 	internal static class StatusBarPatches {
@@ -39,7 +40,7 @@ namespace HungerRevamped {
 				// Starving hunger bar colors
 				if (fillValue < Tuning.hungerLevelStarving) {
 					__instance.m_OuterBoxSprite.color = InterfaceManager.GetInstance().m_StatusOuterBoxEmptyColor;
-					Utils.SetActive(__instance.m_SpriteWhenEmpty.gameObject, true);
+                    Utils.SetActive(__instance.m_SpriteWhenEmpty.gameObject, true);
 					__instance.SetActiveBacksplash(__instance.m_BacksplashDepleted);
 				}
 			}

@@ -1,88 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76E55258-60B2-4882-8E97-3840EB706DAE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HungerRevamped</RootNamespace>
-    <AssemblyName>HungerRevamped</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2CppSystem">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MelonLoader">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ModSettings">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnhollowerBaseLib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnhollowerRuntimeLib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CustomModeSettings.cs" />
-    <Compile Include="FoodPoisoningTuple.cs" />
-    <Compile Include="HungerRevampedMod.cs" />
-    <Compile Include="HungerTuple.cs" />
-    <Compile Include="MenuSettings.cs" />
-    <Compile Include="Patches\CookingConditionFix.cs" />
-    <Compile Include="Patches\DebugCommandPatches.cs" />
-    <Compile Include="HungerRevamped.cs" />
-    <Compile Include="HungerRevampedSaveDataProxy.cs" />
-    <Compile Include="Patches\ExploitableCookingSkillFix.cs" />
-    <Compile Include="Patches\FoodPoisoningPatches.cs" />
-    <Compile Include="Patches\GameStatePatches.cs" />
-    <Compile Include="Patches\HarvestFoodForCanPatch.cs" />
-    <Compile Include="Patches\PreventCookingRuinedFoodPatches.cs" />
-    <Compile Include="Patches\PreventEatingRuinedFood.cs" />
-    <Compile Include="Patches\StatusBarPatches.cs" />
-    <Compile Include="Patches\UIPanelPatches.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Patches\SerializationPatches.cs" />
-    <Compile Include="Tuning.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--This is an xml comment. Comments have no impact on compiling.-->
+
+	<PropertyGroup>
+		<!--This is the .NET version the mod will be compiled with. Don't change it.-->
+		<TargetFramework>net6.0</TargetFramework>
+
+		<!--This tells the compiler to use the latest C# version.-->
+		<LangVersion>Latest</LangVersion>
+
+		<!--This adds global usings for a few common System namespaces.-->
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!--This enables nullable annotation and analysis. It's good coding form.-->
+		<Nullable>enable</Nullable>
+
+		<!--This tells the compiler to use assembly attributes instead of generating its own.-->
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+		<!--PDB files give line numbers in stack traces (errors). This is useful for debugging. There are 3 options:-->
+		<!--full has a pdb file created beside the dll.-->
+		<!--embedded has the pdb data embedded within the dll. This is useful because bug reports will then have line numbers.-->
+		<!--none skips creation of pdb data.-->
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+
+	<!--This is the of packages that the mod references.-->
+	<ItemGroup>
+		<!--This package contains almost everything a person could possibly need to reference while modding.-->
+		<PackageReference Include="STBlade.Modding.TLD.Il2CppAssemblies.Windows" Version="2.10.0" />
+		<PackageReference Include="stblade.Modding.TLD.ModData" Version="1.5.1" />
+		<PackageReference Include="STBlade.Modding.TLD.ModSettings" Version="1.9.0" />
+		<!--The package version here in this template may be outdated and need to be updated. Visual Studio can update package versions automatically.-->
+		<!--If the mod references any other mods (such as ModSettings), that NuGet package will also need to be listed here.-->
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Utils\" />
+	</ItemGroup>
 </Project>

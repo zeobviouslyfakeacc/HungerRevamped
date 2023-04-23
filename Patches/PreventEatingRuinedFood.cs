@@ -1,5 +1,6 @@
 ﻿using System;
 using HarmonyLib;
+using Il2Cpp;
 
 namespace HungerRevamped {
 
